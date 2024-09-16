@@ -32,5 +32,7 @@ Note: The demo video for this part was created before the video for part 2, so y
 - You can only passoff once
 - If you passoff before the passoff day, you will get an additional 5% of extra credit for this assignment
 
+[Milestone 1 FAQ](https://byu.instructure.com/courses/27157/assignments/965315)
+
 [Link to Instructions/Grading Rubric](https://byu.instructure.com/courses/27157/assignments/965315)
  
