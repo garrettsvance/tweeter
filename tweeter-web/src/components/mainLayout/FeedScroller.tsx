@@ -113,7 +113,7 @@ const FeedScroller = () => {
     return FakeData.instance.findUserByAlias(alias);
   };
 
-  return (
+  return ( //TODO: you'll be combining the duplicate code found here and in story scroller (for example) with a "statusitem"
     <div className="container px-0 overflow-visible vh-100">
       <InfiniteScroll
         className="pr-0 mr-0"
