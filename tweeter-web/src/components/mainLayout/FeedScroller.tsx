@@ -6,6 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 import Post from "../statusItem/Post";
 import useToastListener from "../toaster/ToastListenerHook";
+import StatusItem from "../statusItem/StatusItem";
 
 export const PAGE_SIZE = 10;
 
@@ -114,54 +115,23 @@ const FeedScroller = () => {
   };
 
   return ( //TODO: you'll be combining the duplicate code found here and in story scroller (for example) with a "statusitem"
-    <div className="container px-0 overflow-visible vh-100">
-      <InfiniteScroll
-        className="pr-0 mr-0"
-        dataLength={items.length}
-        next={loadMoreItems}
-        hasMore={hasMoreItems}
-        loader={<h4>Loading...</h4>}
-      >
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className="row mb-3 mx-0 px-0 border rounded bg-white"
-          >
-            <div className="col bg-light mx-0 px-0">
-              <div className="container px-0">
-                <div className="row mx-0 px-0">
-                  <div className="col-auto p-3">
-                    <img
-                      src={item.user.imageUrl}
-                      className="img-fluid"
-                      width="80"
-                      alt="Posting user"
-                    />
-                  </div>
-                  <div className="col">
-                    <h2>
-                      <b>
-                        {item.user.firstName} {item.user.lastName}
-                      </b>{" "}
-                      -{" "}
-                      <Link
-                        to={item.user.alias}
-                        onClick={(event) => navigateToUser(event)}
-                      >
-                        {item.user.alias}
-                      </Link>
-                    </h2>
-                    {item.formattedDate}
-                    <br />
-                    <Post status={item} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </InfiniteScroll>
-    </div>
+      <div className="container px-0 overflow-visible vh-100">
+        <InfiniteScroll
+            className="pr-0 mr-0"
+            dataLength={items.length}
+            next={loadMoreItems}
+            hasMore={hasMoreItems}
+            loader={<h4>Loading...</h4>}
+        >
+          {items.map((item, index) => (
+              <StatusItem
+                  key={index}
+                  item={item}
+                  navigateToUser={navigateToUser}
+              />
+          ))}
+        </InfiniteScroll>
+      </div>
   );
 };
 
