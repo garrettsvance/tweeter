@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthenticationFormLayout from "../AuthenticationFormLayout";
 import { AuthToken, FakeData, User } from "tweeter-shared";
 import useToastListener from "../../toaster/ToastListenerHook";
+import AuthField from "../../authField/AuthField";
 
 interface Props {
   originalUrl?: string;
@@ -107,17 +108,29 @@ const Login = (props: Props) => {
   };
 
   return (
-    <AuthenticationFormLayout
-      headingText="Please Sign In"
-      submitButtonLabel="Sign in"
-      oAuthHeading="Sign in with:"
-      inputFieldGenerator={inputFieldGenerator}
-      switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
-      setRememberMe={setRememberMe}
-      submitButtonDisabled={checkSubmitButtonStatus}
-      isLoading={isLoading}
-      submit={doLogin}
-    />
+      <AuthenticationFormLayout
+          headingText="Please Sign In"
+          submitButtonLabel="Sign in"
+          oAuthHeading="Sign in with:"
+          inputFieldGenerator={() => (
+              <AuthField
+                  alias={alias}
+                  setAlias={setAlias}
+                  password={password}
+                  setPassword={setPassword}
+                  onKeyDown={loginOnEnter}
+              />
+          )}
+          switchAuthenticationMethodGenerator={() => (
+              <div className="mb-3">
+                Not registered? <Link to="/register">Register</Link>
+              </div>
+          )}
+          setRememberMe={setRememberMe}
+          submitButtonDisabled={checkSubmitButtonStatus}
+          isLoading={isLoading}
+          submit={doLogin}
+      />
   );
 };
 
