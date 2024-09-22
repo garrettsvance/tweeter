@@ -12,7 +12,7 @@ const StatusItem: React.FC<StatusItemProps> = ({ item, navigateToUser }) => {
         <div className="row mb-3 mx-0 px-0 border rounded bg-white">
             <div className="col bg-light mx-0 px-0">
                 <div className="container px-0">
-
+                    <div classname=""
                 </div>
             </div>
         </div>
