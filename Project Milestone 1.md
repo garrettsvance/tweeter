@@ -13,7 +13,7 @@ In part one of this assignment, you will improve the provided Tweeter UI by addi
 
 **Note:** When you create the AuthenticationFields component, you will notice a slight difference between register and login. There is an onKeyDown event that calls a different method on login vs, register. You can handle that by passing the function to be called as a prop into the AuthenticationFields component.
 
-6.  [] Create an OAuth component, as described in the video, to remove the OAuth fields from the AuthenticationFormLayout component.
+6. - [x] Create an OAuth component, as described in the video, to remove the OAuth fields from the AuthenticationFormLayout component.
 
 ## Part 2: More React Components
 [] In part two of the assignment, you will eliminate additional duplication from the UI by creating an additional React component. This [demo video](https://www.youtube.com/watch?v=a3aNCs-Az5Y&feature=youtu.be) shows you how to create the component by creating a similar one for you. After watching the video, you should eliminate the duplication in FeedScroller and StoryScroller by creating a StatusItemScroller, similar to the UserItemScroller created in the video.
