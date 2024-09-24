@@ -11,12 +11,18 @@ import StatusItem from "../statusItem/StatusItem";
 export const PAGE_SIZE = 10;
 
 interface Props {
-
+    loadMore: (
+        authToken: AuthToken,
+        userAlias: string,
+        pageSize: number,
+        lastItem: Status | null
+    ) => Promise<[Status[], boolean]>;
+    itemDescription: string;
 }
 
 
 
-const StatusItemScroller = () => {
+const StatusItemScroller = (props: Props) => {
     const { displayErrorMessage } = useToastListener();
     const [items, setItems] = useState<Status[]>([]);
     const [newItems, setNewItems] = useState<Status[]>([]);
@@ -59,7 +65,7 @@ const StatusItemScroller = () => {
 
     const loadMoreItems = async () => {
         try {
-            const [newItems, hasMore] = await loadMoreFeedItems(
+            const [newItems, hasMore] = await props.loadMore(
                 authToken!,
                 displayedUser!.alias,
                 PAGE_SIZE,
@@ -77,49 +83,6 @@ const StatusItemScroller = () => {
         }
     };
 
-    const loadMoreFeedItems = async (
-        authToken: AuthToken,
-        userAlias: string,
-        pageSize: number,
-        lastItem: Status | null
-    ): Promise<[Status[], boolean]> => {
-        // TODO: Replace with the result of calling server
-        return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-    };
-
-    const navigateToUser = async (event: React.MouseEvent): Promise<void> => {
-        event.preventDefault();
-
-        try {
-            const alias = extractAlias(event.target.toString());
-
-            const user = await getUser(authToken!, alias);
-
-            if (!!user) {
-                if (currentUser!.equals(user)) {
-                    setDisplayedUser(currentUser!);
-                } else {
-                    setDisplayedUser(user);
-                }
-            }
-        } catch (error) {
-            displayErrorMessage(`Failed to get user because of exception: ${error}`);
-        }
-    };
-
-    const extractAlias = (value: string): string => {
-        const index = value.indexOf("@");
-        return value.substring(index);
-    };
-
-    const getUser = async (
-        authToken: AuthToken,
-        alias: string
-    ): Promise<User | null> => {
-        // TODO: Replace with the result of calling server
-        return FakeData.instance.findUserByAlias(alias);
-    };
-
     return ( //TODO: you'll be combining the duplicate code found here and in story scroller (for example) with a "statusitem"
         <div className="container px-0 overflow-visible vh-100">
             <InfiniteScroll
@@ -130,11 +93,12 @@ const StatusItemScroller = () => {
                 loader={<h4>Loading...</h4>}
             >
                 {items.map((item, index) => (
-                    <StatusItem
+                    <div
                         key={index}
-                        item={item}
-                        navigateToUser={navigateToUser}
-                    />
+                        className="row mb-3 mx-0 px-0 border rounded bg-white"
+                    >
+                        <StatusItem item={item} />
+                    </div>
                 ))}
             </InfiniteScroll>
         </div>

@@ -5,10 +5,12 @@ import React from "react";
 
 interface StatusItemProps {
     item: Status;
-    navigateToUser: (event: React.MouseEvent) => Promise<void>;
+
 }
 
-const StatusItem: React.FC<StatusItemProps> = ({ item, navigateToUser }) => {
+const StatusItem = (props: StatusItemProps) => {
+    const { navigateToUser } = useUserNavigation();
+
     return (
         <div className="row mb-3 mx-0 px-0 border rounded bg-white">
             <div className="col bg-light mx-0 px-0">
@@ -16,7 +18,7 @@ const StatusItem: React.FC<StatusItemProps> = ({ item, navigateToUser }) => {
                     <div className="row mx-0 px-0">
                         <div className="col-auto p-3">
                             <img
-                            src={item.user.imageUrl}
+                            src={props.item.user.imageUrl}
                             className="img-fluid"
                             width="80"
                             alt="Posting user"
@@ -25,19 +27,19 @@ const StatusItem: React.FC<StatusItemProps> = ({ item, navigateToUser }) => {
                         <div className="col">
                             <h2>
                                 <b>
-                                    {item.user.firstName} {item.user.lastName}
+                                    {props.item.user.firstName} {props.item.user.lastName}
                                 </b>{" "}
                                 -{" "}
                                 <Link
-                                    to={item.user.alias}
+                                    to={props.item.user.alias}
                                     onClick={(event) => navigateToUser(event)}
                                 >
-                                    {item.user.alias}
+                                    {props.item.user.alias}
                                 </Link>
                             </h2>
-                            {item.formattedDate}
+                            {props.item.formattedDate}
                             <br />
-                            <Post status={item} />
+                            <Post status={props.item} />
                         </div>
                     </div>
                 </div>
