@@ -1,15 +1,21 @@
 import { Link } from "react-router-dom";
 import Post from "./Post";
 import { Status } from "tweeter-shared";
-import React from "react";
+import React, {useContext} from "react";
+import useToastListener from "../toaster/ToastListenerHook";
+import {UserInfoContext} from "../userInfo/UserInfoProvider";
 
-interface StatusItemProps {
+interface Props {
     item: Status;
 
 }
 
-const StatusItem = (props: StatusItemProps) => {
-    const { navigateToUser } = useUserNavigation();
+const StatusItem = (props: Props) => {
+    const { displayErrorMessage } = useToastListener();
+    const { setDisplayedUser, currentUser, authToken } =
+        useContext(UserInfoContext);
+    const navigateToUser = async (event: React.MouseEvent): Promise<void> => {
+        event.preventDefault();
 
     return (
         <div className="row mb-3 mx-0 px-0 border rounded bg-white">
