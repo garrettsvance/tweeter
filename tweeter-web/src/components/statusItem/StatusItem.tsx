@@ -3,19 +3,16 @@ import Post from "./Post";
 import { Status } from "tweeter-shared";
 import React, {useContext} from "react";
 import useToastListener from "../toaster/ToastListenerHook";
-import {UserInfoContext} from "../userInfo/UserInfoProvider";
+
+import userInfoHook from "../userInfo/userInfoHook";
+import useUserNavigation from "../userInfo/userNavigationHook";
 
 interface Props {
     item: Status;
-
 }
 
 const StatusItem = (props: Props) => {
-    const { displayErrorMessage } = useToastListener();
-    const { setDisplayedUser, currentUser, authToken } =
-        useContext(UserInfoContext);
-    const navigateToUser = async (event: React.MouseEvent): Promise<void> => {
-        event.preventDefault();
+    const { navigateToUser } = useUserNavigation();
 
     return (
         <div className="row mb-3 mx-0 px-0 border rounded bg-white">
