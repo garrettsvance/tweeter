@@ -1,18 +1,11 @@
+import React, {ChangeEvent} from "react";
+
 interface AuthFieldProps {
-    alias: string;
-    setAlias: (alias: string) => void;
-    password: string;
-    setPassword: (password: string) => void;
-    onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => void;
+    onAliasChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onPasswordChange: (even: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const AuthField: React.FC<AuthFieldProps> = ({
-    alias,
-    setAlias,
-    password,
-    setPassword,
-    onKeyDown,
-}) => {
+const AuthField: React.FC<AuthFieldProps> = (props: AuthFieldProps) => {
     return (
         <>
            <div className="form-floating">
@@ -22,9 +15,7 @@ const AuthField: React.FC<AuthFieldProps> = ({
                     size={50}
                     id="aliasInput"
                     placeholder="Alias"
-                    value={alias}
-                    onKeyDown={onKeyDown}
-                    onChange={(event) => setAlias(event.target.value)}
+                    onChange={props.onAliasChange}
                 />
                <label htmlFor="aliasInput">Alias</label>
            </div>
@@ -34,9 +25,7 @@ const AuthField: React.FC<AuthFieldProps> = ({
                     className="form-control"
                     id="passwordInput"
                     placeholder="Password"
-                    value={password}
-                    onKeyDown={onKeyDown}
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={props.onPasswordChange}
                 />
                 <label htmlFor="passwordInput">Password</label>
             </div>

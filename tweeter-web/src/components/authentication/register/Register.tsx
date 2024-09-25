@@ -155,29 +155,10 @@ const Register = () => {
           />
           <label htmlFor="lastNameInput">Last Name</label>
         </div>
-        <div className="form-floating">
-          <input
-            type="text"
-            className="form-control"
-            size={50}
-            id="aliasInput"
-            placeholder="name@example.com"
-            onKeyDown={registerOnEnter}
-            onChange={(event) => setAlias(event.target.value)}
-          />
-          <label htmlFor="aliasInput">Alias</label>
-        </div>
-        <div className="form-floating">
-          <input
-            type="password"
-            className="form-control"
-            id="passwordInput"
-            placeholder="Password"
-            onKeyDown={registerOnEnter}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-          <label htmlFor="passwordInput">Password</label>
-        </div>
+        <AuthField
+            onAliasChange={(event) => setAlias(event.target.value)}
+            onPasswordChange={(event) => setPassword(event.target.value)}
+        />
         <div className="form-floating mb-3">
           <input
             type="file"
@@ -196,7 +177,7 @@ const Register = () => {
   const switchAuthenticationMethodGenerator = () => {
     return (
       <div className="mb-3">
-        Algready registered? <Link to="/login">Sign in</Link>
+        Already registered? <Link to="/login">Sign in</Link>
       </div>
     );
   };
@@ -206,57 +187,8 @@ const Register = () => {
           headingText="Please Register"
           submitButtonLabel="Register"
           oAuthHeading="Register with:"
-          inputFieldGenerator={() => (
-              <>
-                <div className="form-floating">
-                  <input
-                      type="text"
-                      className="form-control"
-                      size={50}
-                      id="firstNameInput"
-                      placeholder="First Name"
-                      onKeyDown={registerOnEnter}
-                      onChange={(event) => setFirstName(event.target.value)}
-                  />
-                  <label htmlFor="firstNameInput">First Name</label>
-                </div>
-                <div className="form-floating">
-                  <input
-                      type="text"
-                      className="form-control"
-                      size={50}
-                      id="lastNameInput"
-                      placeholder="Last Name"
-                      onKeyDown={registerOnEnter}
-                      onChange={(event) => setLastName(event.target.value)}
-                  />
-                  <label htmlFor="lastNameInput">Last Name</label>
-                </div>
-                <AuthField
-                    alias={alias}
-                    setAlias={setAlias}
-                    password={password}
-                    setPassword={setPassword}
-                    onKeyDown={registerOnEnter}
-                />
-                <div className="form-floating mb-3">
-                  <input
-                      type="file"
-                      className="d-inline-block py-5 px-4 form-control bottom"
-                      id="imageFileInput"
-                      onKeyDown={registerOnEnter}
-                      onChange={handleFileChange}
-                  />
-                  <label htmlFor="imageFileInput">User Image</label>
-                  <img src={imageUrl} className="img-thumbnail" alt=""></img>
-                </div>
-              </>
-          )}
-          switchAuthenticationMethodGenerator={() => (
-              <div className="mb-3">
-                Already registered? <Link to="/login">Sign in</Link>
-              </div>
-          )}
+          inputFieldGenerator={inputFieldGenerator}
+          switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
           setRememberMe={setRememberMe}
           submitButtonDisabled={checkSubmitButtonStatus}
           isLoading={isLoading}
