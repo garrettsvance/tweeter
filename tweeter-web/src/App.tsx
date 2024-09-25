@@ -17,7 +17,7 @@ import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 
 const App = () => {
-  const { currentUser, authToken } = useContext(UserInfoContext);
+  const { currentUser, authToken } = useContext(UserInfoContext); //TODO useUserInfo
 
   const isAuthenticated = (): boolean => {
     return !!currentUser && !!authToken;
