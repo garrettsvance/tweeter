@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
 import Post from "./Post";
 import { Status } from "tweeter-shared";
-import React, {useContext} from "react";
-import useToastListener from "../toaster/ToastListenerHook";
 
-import userInfoHook from "../userInfo/userInfoHook";
 import useUserNavigation from "../userInfo/userNavigationHook";
 
 interface Props {
-    item: Status;
+    status: Status;
 }
 
 const StatusItem = (props: Props) => {
@@ -21,7 +18,7 @@ const StatusItem = (props: Props) => {
                     <div className="row mx-0 px-0">
                         <div className="col-auto p-3">
                             <img
-                            src={props.item.user.imageUrl}
+                            src={props.status.user.imageUrl}
                             className="img-fluid"
                             width="80"
                             alt="Posting user"
@@ -30,19 +27,19 @@ const StatusItem = (props: Props) => {
                         <div className="col">
                             <h2>
                                 <b>
-                                    {props.item.user.firstName} {props.item.user.lastName}
+                                    {props.status.user.firstName} {props.status.user.lastName}
                                 </b>{" "}
                                 -{" "}
                                 <Link
-                                    to={props.item.user.alias}
+                                    to={props.status.user.alias}
                                     onClick={(event) => navigateToUser(event)}
                                 >
-                                    {props.item.user.alias}
+                                    {props.status.user.alias}
                                 </Link>
                             </h2>
-                            {props.item.formattedDate}
+                            {props.status.formattedDate}
                             <br />
-                            <Post status={props.item} />
+                            <Post status={props.status} />
                         </div>
                     </div>
                 </div>

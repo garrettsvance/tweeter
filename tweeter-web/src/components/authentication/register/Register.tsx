@@ -1,7 +1,5 @@
 import "./Register.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { useContext } from "react";
-import { UserInfoContext } from "../../userInfo/UserInfoProvider";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationFormLayout from "../AuthenticationFormLayout";
@@ -241,6 +239,17 @@ const Register = () => {
                     setPassword={setPassword}
                     onKeyDown={registerOnEnter}
                 />
+                <div className="form-floating mb-3">
+                  <input
+                      type="file"
+                      className="d-inline-block py-5 px-4 form-control bottom"
+                      id="imageFileInput"
+                      onKeyDown={registerOnEnter}
+                      onChange={handleFileChange}
+                  />
+                  <label htmlFor="imageFileInput">User Image</label>
+                  <img src={imageUrl} className="img-thumbnail" alt=""></img>
+                </div>
               </>
           )}
           switchAuthenticationMethodGenerator={() => (

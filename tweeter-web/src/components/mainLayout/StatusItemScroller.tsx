@@ -1,10 +1,6 @@
-import { useContext } from "react";
-import { UserInfoContext } from "../userInfo/UserInfoProvider";
-import { AuthToken, FakeData, Status, User } from "tweeter-shared";
+import { AuthToken, Status } from "tweeter-shared";
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Link } from "react-router-dom";
-import Post from "../statusItem/Post";
 import useToastListener from "../toaster/ToastListenerHook";
 import StatusItem from "../statusItem/StatusItem";
 import userInfoHook from "../userInfo/userInfoHook";
@@ -20,8 +16,6 @@ interface Props {
     ) => Promise<[Status[], boolean]>;
     itemDescription: string;
 }
-
-
 
 const StatusItemScroller = (props: Props) => {
     const { displayErrorMessage } = useToastListener();
@@ -98,7 +92,7 @@ const StatusItemScroller = (props: Props) => {
                         key={index}
                         className="row mb-3 mx-0 px-0 border rounded bg-white"
                     >
-                        <StatusItem item={item} />
+                        <StatusItem status={item} />
                     </div>
                 ))}
             </InfiniteScroll>
