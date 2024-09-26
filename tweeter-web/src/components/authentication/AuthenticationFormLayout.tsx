@@ -14,12 +14,6 @@ interface Props {
 }
 
 const AuthenticationFormLayout = (props: Props) => {
-  const { displayInfoMessage } = useToastListener();
-
-  const displayInfoMessageWithDarkBackground = (message: string): void => {
-    displayInfoMessage(message, 3000, "text-white bg-primary");
-  };
-
   return (
       <div className={props.isLoading ? "loading" : ""}>
         <div className="center">
@@ -38,9 +32,7 @@ const AuthenticationFormLayout = (props: Props) => {
 
               <h1 className="h4 mb-3 fw-normal">Or</h1>
               <h1 className="h5 mb-3 fw-normal">{props.oAuthHeading}</h1>
-
-              <OAuth displayInfoMessageWithDarkBackground={displayInfoMessageWithDarkBackground} />
-
+              <OAuth/>
               <div className="checkbox mb-3">
                 <label>
                   <input
