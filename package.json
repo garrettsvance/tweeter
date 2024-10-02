@@ -8,7 +8,11 @@
   "author": "JWilkerson",
   "license": "ISC",
   "dependencies": {
+    "node": "^22.9.0",
     "rimraf": "^5.0.5",
     "vite-plugin-dts": "^3.7.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
   }
 }

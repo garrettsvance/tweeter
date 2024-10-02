@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthenticationFormLayout from "../AuthenticationFormLayout";
 import { AuthToken, FakeData, User } from "tweeter-shared";
 import useToastListener from "../../toaster/ToastListenerHook";
-import AuthField from "../../authField/AuthField";
+import AuthField from "../AuthField";
 import userInfoHook from "../../userInfo/userInfoHook";
 
 interface Props {
