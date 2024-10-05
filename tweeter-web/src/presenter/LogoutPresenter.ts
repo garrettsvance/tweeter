@@ -17,7 +17,7 @@ export class LogoutPresenter {
     this.userService = new UserService();
   }
 
-  public async logOut(authToken: AuthToken) {
+  public async logout(authToken: AuthToken) {
     this.view.displayInfoMessage("Logging Out...", 0);
 
     try {
