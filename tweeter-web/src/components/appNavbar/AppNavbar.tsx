@@ -12,9 +12,6 @@ const AppNavbar = () => {
   const { displayInfoMessage, displayErrorMessage, clearLastInfoMessage } =
     useToastListener();
 
-  const logOut = async () => {
-    displayInfoMessage("Logging Out...", 0);
-
     try {
       await logout(authToken!);
 

@@ -1,12 +1,13 @@
 import "./Login.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationFormLayout from "../AuthenticationFormLayout";
 import { AuthToken, FakeData, User } from "tweeter-shared";
 import useToastListener from "../../toaster/ToastListenerHook";
 import AuthField from "../AuthField";
 import userInfoHook from "../../userInfo/userInfoHook";
+import { LoginPresenter } from "../../../presenter/LoginPresenter";
 
 interface Props {
   originalUrl?: string;
@@ -26,32 +27,27 @@ const Login = (props: Props) => {
     return !alias || !password;
   };
 
-  const loginOnEnter = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key == "Enter" && !checkSubmitButtonStatus()) {
-      doLogin();
-    }
-  };
-
-  const doLogin = async () => {
-    try {
-      setIsLoading(true);
-
-      const [user, authToken] = await login(alias, password);
-
+  const listener = {
+    authenticated: (user: User, authToken: AuthToken) => {
       updateUserInfo(user, user, authToken, rememberMe);
-
-      if (!!props.originalUrl) {
+      if (props.originalUrl) {
         navigate(props.originalUrl);
       } else {
         navigate("/");
       }
-    } catch (error) {
-      displayErrorMessage(
-        `Failed to log user in because of exception: ${error}`,
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    },
+    displayErrorMessage: (message: string) => {
+      displayErrorMessage(message);
+    },
+    setLoadingState: (isLoading: boolean) => {
+      setIsLoading(isLoading);
+    },
+  };
+
+  const presenter = new LoginPresenter(listener);
+
+  const doLogin = () => {
+    presenter.doLogin(alias, password);
   };
 
   const inputFieldGenerator = () => {
