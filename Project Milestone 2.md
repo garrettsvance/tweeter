@@ -70,3 +70,8 @@ Add public methods to your presenter classes as needed to allow views to call th
 - (25) Layered Architecture
     - (15) MVP: Generally working, correct logic split among MVP layers
     - (10) Observer Pattern
+
+## Steps
+1. Service
+2. Presenter
+3. 

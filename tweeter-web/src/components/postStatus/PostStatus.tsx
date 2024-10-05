@@ -27,22 +27,12 @@ const PostStatus = () => {
       displayInfoMessage("Status posted!", 2000);
     } catch (error) {
       displayErrorMessage(
-        `Failed to post the status because of exception: ${error}`
+        `Failed to post the status because of exception: ${error}`,
       );
     } finally {
       clearLastInfoMessage();
       setIsLoading(false);
     }
-  };
-
-  const postStatus = async (
-    authToken: AuthToken,
-    newStatus: Status
-  ): Promise<void> => {
-    // Pause so we can see the logging out message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
-
-    // TODO: Call the server to post the status
   };
 
   const clearPost = (event: React.MouseEvent) => {

@@ -47,25 +47,11 @@ const Login = (props: Props) => {
       }
     } catch (error) {
       displayErrorMessage(
-        `Failed to log user in because of exception: ${error}`
+        `Failed to log user in because of exception: ${error}`,
       );
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const login = async (
-    alias: string,
-    password: string
-  ): Promise<[User, AuthToken]> => {
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("Invalid alias or password");
-    }
-
-    return [user, FakeData.instance.authToken];
   };
 
   const inputFieldGenerator = () => {
@@ -86,17 +72,17 @@ const Login = (props: Props) => {
   };
 
   return (
-      <AuthenticationFormLayout
-          headingText="Please Sign In"
-          submitButtonLabel="Sign in"
-          oAuthHeading="Sign in with:"
-          inputFieldGenerator={inputFieldGenerator}
-          switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
-          setRememberMe={setRememberMe}
-          submitButtonDisabled={checkSubmitButtonStatus}
-          isLoading={isLoading}
-          submit={doLogin}
-      />
+    <AuthenticationFormLayout
+      headingText="Please Sign In"
+      submitButtonLabel="Sign in"
+      oAuthHeading="Sign in with:"
+      inputFieldGenerator={inputFieldGenerator}
+      switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
+      setRememberMe={setRememberMe}
+      submitButtonDisabled={checkSubmitButtonStatus}
+      isLoading={isLoading}
+      submit={doLogin}
+    />
   );
 };
 
