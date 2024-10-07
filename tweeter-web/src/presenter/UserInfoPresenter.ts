@@ -73,7 +73,7 @@ export class UserInfoPresenter {
   ): Promise<void> {
     try {
       this.view.setIsLoading(true);
-      this.view.displayInfoMessage(`Following ${userToFollow.name}...`, 0);
+      this.view.displayInfoMessage(`Following ${userToFollow.name}...`, 2000);
 
       let [followerCount, followeeCount] = await this.followService.follow(
         authToken!,
@@ -98,7 +98,10 @@ export class UserInfoPresenter {
   ): Promise<void> {
     try {
       this.view.setIsLoading(true);
-      this.view.displayInfoMessage(`Unfollowing ${userToUnfollow.name}...`, 0);
+      this.view.displayInfoMessage(
+        `Unfollowing ${userToUnfollow.name}...`,
+        2000,
+      );
 
       let [followerCount, followeeCount] = await this.followService.follow(
         authToken!,
