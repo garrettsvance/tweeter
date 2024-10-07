@@ -10,7 +10,6 @@ export class UserService {
     const user = FakeData.instance.firstUser;
 
     if (user === null) {
-      git;
       throw new Error("Invalid alias or password");
     }
 
