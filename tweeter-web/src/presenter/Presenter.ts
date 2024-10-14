@@ -2,14 +2,14 @@ export interface View {
   displayErrorMessage: (message: string) => void;
 }
 
-export class Presenter {
-  private _view: View;
+export class Presenter<V extends View> {
+  private readonly _view: V;
 
-  public constructor(view: View) {
+  public constructor(view: V) {
     this._view = view;
   }
 
-  protected get view(): View {
+  protected get view(): V {
     return this._view;
   }
 }
