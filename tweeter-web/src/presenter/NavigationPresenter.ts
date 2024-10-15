@@ -15,6 +15,11 @@ export class NavigationPresenter extends Presenter<NavigationView> {
     this.userService = new UserService();
   }
 
+  private extractAlias(value: string): string {
+    const index = value.indexOf("@");
+    return value.substring(index);
+  }
+
   public async navigateToUser(
     authToken: AuthToken,
     currentUser: User,
@@ -22,7 +27,7 @@ export class NavigationPresenter extends Presenter<NavigationView> {
   ) {
     event.preventDefault();
 
-    try {
+    await this.doFailureReportingOperation(async () => {
       const alias = this.extractAlias(event.target.toString());
 
       const user = await this.userService.getUser(authToken!, alias);
@@ -34,15 +39,6 @@ export class NavigationPresenter extends Presenter<NavigationView> {
           this.view.setDisplayedUser(user);
         }
       }
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to get user because of exception: ${error}`,
-      );
-    }
-  }
-
-  public extractAlias(value: string): string {
-    const index = value.indexOf("@");
-    return value.substring(index);
+    }, "get user");
   }
 }

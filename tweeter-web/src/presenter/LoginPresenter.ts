@@ -9,17 +9,9 @@ export class LoginPresenter extends AuthenticatePresenter {
   }
 
   public async doLogin(alias: string, password: string) {
-    this.setLoadingState(true);
-
-    try {
-      const [user, authToken] = await this.userService.login(alias, password);
-      this.authenticated(user, authToken);
-    } catch (error) {
-      this.displayErrorMessage(
-        `Failed to login user because of exception: ${error}`,
-      );
-    } finally {
-      this.setLoadingState(false);
-    }
+    await this.doAuthentication(
+      () => this.userService.login(alias, password),
+      "login",
+    );
   }
 }

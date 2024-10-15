@@ -26,4 +26,21 @@ export class AuthenticatePresenter extends Presenter<AuthenticationView> {
   protected setLoadingState(state: boolean) {
     this.view.setLoadingState(state);
   }
+
+  protected async doAuthentication(
+    authentication: () => Promise<[User, AuthToken]>,
+    operationDescription: string,
+  ) {
+    this.setLoadingState(true);
+    try {
+      const [user, authToken] = await authentication();
+      this.authenticated(user, authToken);
+    } catch (error) {
+      this.displayErrorMessage(
+        `Failed to ${operationDescription} because of exception: ${error}`,
+      );
+    } finally {
+      this.setLoadingState(false);
+    }
+  }
 }

@@ -2,6 +2,17 @@ export interface View {
   displayErrorMessage: (message: string) => void;
 }
 
+export interface MessageView extends View {
+  displayInfoMessage: (message: string, duration: number) => void;
+  clearLastInfoMessage: () => void;
+  clearUserInfo: () => void;
+}
+
+export interface StatusView extends View {
+  displayInfoMessage: (message: string, duration: number) => void;
+  clearLastInfoMessage: () => void;
+}
+
 export class Presenter<V extends View> {
   private readonly _view: V;
 
@@ -11,5 +22,18 @@ export class Presenter<V extends View> {
 
   protected get view(): V {
     return this._view;
+  }
+
+  protected async doFailureReportingOperation(
+    operation: () => Promise<void>,
+    operationDescription: string,
+  ): Promise<void> {
+    try {
+      await operation();
+    } catch (error) {
+      this.view.displayErrorMessage(
+        `Failed to ${operationDescription} because of exception: ${error}`,
+      );
+    }
   }
 }
