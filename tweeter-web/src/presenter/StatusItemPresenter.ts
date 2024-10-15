@@ -5,14 +5,14 @@ export interface StatusItemView extends View {
   addItems: (items: Status[]) => void;
 }
 
-export abstract class StatusItemPresenter extends Presenter {
+export abstract class StatusItemPresenter extends Presenter<StatusItemView> {
+  private _hasMoreItems = true;
+  private _lastItem: Status | null = null;
+
   public reset() {
     this._lastItem = null;
     this._hasMoreItems = true;
   }
-
-  private _hasMoreItems = true;
-  private _lastItem: Status | null = null;
 
   protected constructor(view: StatusItemView) {
     super(view);
