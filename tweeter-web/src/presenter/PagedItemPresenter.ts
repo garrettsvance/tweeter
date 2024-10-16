@@ -14,7 +14,7 @@ export abstract class PagedItemPresenter<T, U> extends Presenter<
   private _lastItem: T | null = null;
   private readonly _service: U;
 
-  protected constructor(view: PagedItemView<T>) {
+  public constructor(view: PagedItemView<T>) {
     super(view);
     this._service = this.createService();
   }
