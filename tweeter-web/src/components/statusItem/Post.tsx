@@ -7,8 +7,6 @@ interface Props {
   status: Status;
 }
 
-//TODO: watch hook demo to see what file we start with, where we pull info from, etc
-
 const Post = (props: Props) => {
   const { navigateToUser } = useUserNavigation();
 
@@ -36,7 +34,7 @@ const Post = (props: Props) => {
           <br key={index} />
         ) : (
           segment.text
-        )
+        ),
       )}
     </>
   );
