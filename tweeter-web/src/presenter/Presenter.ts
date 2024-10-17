@@ -34,6 +34,7 @@ export class Presenter<V extends View> {
       this.view.displayErrorMessage(
         `Failed to ${operationDescription} because of exception: ${error}`,
       );
-    }
+    } // TODO: look at finding a way to use an "if" statement to detect finally,
+    // combining this with the similar code in authenticate presenter. additionally, check for other "finallys"
   }
 }
