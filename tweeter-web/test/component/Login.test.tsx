@@ -1,5 +1,5 @@
 import { LoginPresenter } from "../../src/presenter/LoginPresenter";
-import { userEvent } from "@testing-library/user-event/setup/index";
+import { userEvent } from "@testing-library/user-event";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { fab } from "@fortawesome/free-brands-svg-icons";
@@ -47,9 +47,9 @@ describe("Login Component", () => {
     const { signInButton, aliasField, passwordField, user } =
       renderLoginAndGetElements(url, mockPresenterInstance);
     await user.type(aliasField, alias);
-    await user.type(passwordField, "password");
+    await user.type(passwordField, password);
     await user.click(signInButton);
-    verify(mockPresenterInstance.doLogin(alias, password, url)).once();
+    verify(mockPresenter.doLogin(alias, password, url)).once();
   });
 });
 
@@ -67,9 +67,9 @@ const renderLogin = (originalUrl: string, presenter?: LoginPresenter) => {
   return render(
     <MemoryRouter>
       {!!presenter ? (
-        <Login originalUrl={originalUrl} presenter={presenter} />
+        <Login url={originalUrl} presenter={presenter} />
       ) : (
-        <Login originalUrl={originalUrl} />
+        <Login url={originalUrl} />
       )}
     </MemoryRouter>,
   );

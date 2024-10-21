@@ -45,7 +45,7 @@ const Login = (props: Props) => {
     },
   };
 
-  const presenter = new LoginPresenter(listener);
+  const [presenter] = useState(props.presenter ?? new LoginPresenter(listener));
 
   const doLogin = () => {
     presenter.doLogin(alias, password, props.url);
