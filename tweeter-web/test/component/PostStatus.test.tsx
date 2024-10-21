@@ -37,7 +37,7 @@ describe("PostStatus Component", () => {
 
     await user.type(postStatusTextField, "post");
     expect(postStatusButton).toBeEnabled();
-    expect(clearPostButton).toBeDisabled();
+    expect(clearPostButton).toBeEnabled();
   });
   // Test 3
   it("both buttons disabled when text field is cleared", async () => {

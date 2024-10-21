@@ -27,7 +27,7 @@ const PostStatus = (props: PostStatusProps) => {
       displayInfoMessage(message, duration),
   };
 
-  const presenter = new PostStatusPresenter(listener);
+  const presenter = props.presenter ?? new PostStatusPresenter(listener);
 
   const submitPost = async (event: React.MouseEvent) => {
     event.preventDefault();
