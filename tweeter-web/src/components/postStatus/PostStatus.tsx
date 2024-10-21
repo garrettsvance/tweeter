@@ -7,7 +7,11 @@ import {
   PostStatusView,
 } from "../../presenter/PostStatusPresenter";
 
-const PostStatus = () => {
+interface PostStatusProps {
+  presenter?: PostStatusPresenter;
+}
+
+const PostStatus = (props: PostStatusProps) => {
   const { displayErrorMessage, displayInfoMessage, clearLastInfoMessage } =
     useToastListener();
   const { currentUser, authToken } = userInfoHook();
@@ -17,7 +21,7 @@ const PostStatus = () => {
   const listener: PostStatusView = {
     clearLastInfoMessage: () => clearLastInfoMessage(),
     displayErrorMessage: (message: string) => displayErrorMessage(message),
-    setPost: (post: string) => setPost(post),
+    clearPost: () => setPost(""),
     setIsLoading: (loading: boolean) => setIsLoading(loading),
     displayInfoMessage: (message: string, duration: number) =>
       displayInfoMessage(message, duration),
