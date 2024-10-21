@@ -30,34 +30,34 @@ describe("LogoutPresenter", () => {
 
     when(logoutPresenterSpy.service).thenReturn(mockUserServiceInstance);
   });
-
+  // Test 1
   it("tells the view to display the logging out message", async () => {
     await appNavbarPresenter.logOut(authToken);
     verify(
       mockAppNavbarPresenterView.displayInfoMessage("Logging Out...", 0),
     ).once();
   });
-
+  // Test 2
   it("calls logout on the user service with the correct auth token", async () => {
     await appNavbarPresenter.logOut(authToken);
     verify(mockUserService.logout(authToken)).once();
   });
-
+  // Test 3
   it("tells the view to clear the last info message and clear the user info when logout successful", async () => {
     await appNavbarPresenter.logOut(authToken);
     verify(mockAppNavbarPresenterView.clearLastInfoMessage()).once();
     verify(mockAppNavbarPresenterView.clearUserInfo()).once();
     verify(mockAppNavbarPresenterView.displayErrorMessage(anything())).never();
   });
-
+  // Test 4
   it("displays an error message and does not clear the last info message or clear the user info when logout fails", async () => {
-    const error = new Error("An error occured when logging out");
+    const error = new Error("An error occurred when logging out");
     when(mockUserService.logout(authToken)).thenThrow(error);
     await appNavbarPresenter.logOut(authToken);
 
     verify(
       mockAppNavbarPresenterView.displayErrorMessage(
-        `Failed to log user out because of exception: An error occured when logging out`,
+        `Failed to log user out because of exception: An error occurred when logging out`,
       ),
     ).once();
     verify(mockAppNavbarPresenterView.clearLastInfoMessage()).never();

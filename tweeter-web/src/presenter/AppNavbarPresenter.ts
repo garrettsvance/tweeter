@@ -13,7 +13,7 @@ export interface AppNavbarView extends View {
 }
 
 export class AppNavbarPresenter extends Presenter<AppNavbarView> {
-  private _service: UserService;
+  private readonly _service: UserService;
 
   public constructor(view: AppNavbarView) {
     super(view);

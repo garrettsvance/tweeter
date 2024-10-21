@@ -11,6 +11,7 @@ import { LoginPresenter } from "../../../presenter/LoginPresenter";
 
 interface Props {
   originalUrl?: string;
+  presenter?: LoginPresenter;
 }
 
 const Login = (props: Props) => {

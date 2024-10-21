@@ -8,7 +8,11 @@ export class LoginPresenter extends AuthenticatePresenter {
     super(view);
   }
 
-  public async doLogin(alias: string, password: string) {
+  public async doLogin(
+    alias: string,
+    password: string,
+    url: string | undefined,
+  ) {
     await this.doAuthentication(
       () => this.userService.login(alias, password),
       "login",
