@@ -113,7 +113,7 @@ const UnauthenticatedRoutes = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="*" element={<Login originalUrl={location.pathname} />} />
+      <Route path="*" element={<Login url={location.pathname} />} />
     </Routes>
   );
 };

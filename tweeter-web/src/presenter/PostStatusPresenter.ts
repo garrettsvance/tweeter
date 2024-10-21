@@ -33,7 +33,7 @@ export class PostStatusPresenter extends Presenter<PostStatusView> {
       await this.statusService.postStatus(authToken, status);
       this.view.clearPost();
       this.view.displayInfoMessage("Status posted!", 2000);
-    }, "post the status");
+    }, "post status");
     this.view.clearLastInfoMessage();
     this.view.setIsLoading(false);
   }

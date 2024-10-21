@@ -34,7 +34,9 @@ describe("PostStatusPresenter", () => {
   // Test 1
   it("tells the view to display a posting status message", async () => {
     await postStatusPresenter.submitPost(authToken, post, user);
-    verify(mockPostStatusView.displayInfoMessage("Status posted", 2000)).once();
+    verify(
+      mockPostStatusView.displayInfoMessage("Status posted!", 2000),
+    ).once();
   });
   // Test 2
   it("calls postStatus on the post status service with the correct auth token", async () => {
@@ -57,6 +59,7 @@ describe("PostStatusPresenter", () => {
     const error = new Error("An error occurred");
     when(mockStatusService.postStatus(authToken, anything())).thenThrow(error);
     await postStatusPresenter.submitPost(authToken, post, user);
+
     verify(
       mockPostStatusView.displayErrorMessage(
         "Failed to post status because of exception: An error occurred",

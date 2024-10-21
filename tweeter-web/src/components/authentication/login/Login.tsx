@@ -10,7 +10,7 @@ import userInfoHook from "../../userInfo/userInfoHook";
 import { LoginPresenter } from "../../../presenter/LoginPresenter";
 
 interface Props {
-  originalUrl?: string;
+  url?: string;
   presenter?: LoginPresenter;
 }
 
@@ -31,8 +31,8 @@ const Login = (props: Props) => {
   const listener = {
     authenticated: (user: User, authToken: AuthToken) => {
       updateUserInfo(user, user, authToken, rememberMe);
-      if (props.originalUrl) {
-        navigate(props.originalUrl);
+      if (props.url) {
+        navigate(props.url);
       } else {
         navigate("/");
       }
@@ -48,7 +48,7 @@ const Login = (props: Props) => {
   const presenter = new LoginPresenter(listener);
 
   const doLogin = () => {
-    presenter.doLogin(alias, password);
+    presenter.doLogin(alias, password, props.url);
   };
 
   const inputFieldGenerator = () => {

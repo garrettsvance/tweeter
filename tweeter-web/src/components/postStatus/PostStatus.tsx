@@ -52,6 +52,7 @@ const PostStatus = (props: PostStatusProps) => {
             id="postStatusTextArea"
             rows={10}
             placeholder="What's on your mind?"
+            aria-label="status field"
             value={post}
             onChange={(event) => {
               setPost(event.target.value);

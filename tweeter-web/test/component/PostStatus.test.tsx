@@ -3,7 +3,7 @@ import { PostStatusPresenter } from "../../src/presenter/PostStatusPresenter";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import PostStatus from "../../src/components/postStatus/PostStatus";
-import { userEvent } from "@testing-library/user-event/setup/index";
+import { userEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { anything, instance, mock, verify } from "ts-mockito";
 

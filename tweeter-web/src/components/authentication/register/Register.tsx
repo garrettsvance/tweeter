@@ -7,10 +7,7 @@ import { AuthToken, User } from "tweeter-shared";
 import useToastListener from "../../toaster/ToastListenerHook";
 import AuthField from "../AuthField";
 import userInfoHook from "../../userInfo/userInfoHook";
-import {
-  RegisterPresenter,
-  RegisterView,
-} from "../../../presenter/RegisterPresenter";
+import { RegisterPresenter } from "../../../presenter/RegisterPresenter";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -46,18 +43,25 @@ const Register = () => {
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    presenter.handleImageFile(file);
+    presenter.handleImageFile(
+      file,
+      setImageUrl,
+      setImageBytes,
+      setImageFileExtension,
+    );
   };
 
-  const listener: RegisterView = {
-    displayErrorMessage: displayErrorMessage,
-    setIsLoading: setIsLoading,
-    updateUserInfo: (user: User, authToken: AuthToken) =>
-      updateUserInfo(user, user, authToken, rememberMe),
-    navigate: navigate,
-    setImageBytes: setImageBytes,
-    setImageFileExtension: setImageFileExtension,
-    setImageUrl: setImageUrl,
+  const listener = {
+    authenticated: (user: User, authToken: AuthToken) => {
+      updateUserInfo(user, user, authToken, rememberMe);
+      navigate("/");
+    },
+    displayErrorMessage: (message: string) => {
+      displayErrorMessage(message);
+    },
+    setLoadingState: (isLoading: boolean) => {
+      setIsLoading(isLoading);
+    },
   };
 
   const presenter = new RegisterPresenter(listener);
