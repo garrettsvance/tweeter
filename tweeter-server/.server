@@ -1,0 +1,7 @@
+BUCKET='tweeter-gsvance'
+LAMBDA_ROLE='arn:aws:iam::084828578926:role/tweeter-lambda'
+EDIT_LAMBDALIST='
+TODO: Enter a newline separated list of lambda names and corresponding lambda function names as follows:
+tweeterGetFollowees | lambda/follow/GetFolloweesLambda.handler
+'
+LAMBDALAYER_ARN='arn:aws:lambda:us-east-2:08482857892 6:layer:tweeterLambdaLayer:1'
