@@ -22,7 +22,11 @@ export class FollowService {
     lastItem: UserDto | null,
   ): Promise<[UserDto[], boolean]> {
     // TODO: Replace with the result of calling server
-    return this.getFakeData(lastItem, pageSize, userAlias);
+    return FakeData.instance.getPageOfUsers(
+      User.fromDto(lastItem),
+      pageSize,
+      userAlias,
+    );
   }
 
   private async getFakeData(
