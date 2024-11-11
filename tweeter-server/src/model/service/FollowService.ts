@@ -62,7 +62,7 @@ export class FollowService {
 
   public async follow(
     token: string,
-    userToFollow: User,
+    userToFollow: UserDto,
   ): Promise<[followerCount: number, followeeCount: number]> {
     // Pause so we can see the follow message. Remove when connected to the server
     await new Promise((f) => setTimeout(f, 2000));
@@ -77,7 +77,7 @@ export class FollowService {
 
   public async unfollow(
     token: string,
-    userToUnfollow: User,
+    userToUnfollow: UserDto,
   ): Promise<[followerCount: number, followeeCount: number]> {
     // Pause so we can see the unfollow message. Remove when connected to the server
     await new Promise((f) => setTimeout(f, 2000));

@@ -3,5 +3,6 @@ LAMBDA_ROLE='arn:aws:iam::084828578926:role/tweeter-lambda'
 EDIT_LAMBDALIST='
 tweeterGetFollowees | lambda/follow/GetFolloweesLambda.handler
 tweeterGetFolloweeCount | /lambda/follow/GetFolloweeCountLambda.handler
+tweeterFollow | /lambda/follow/FollowLambda.handler
 '
 LAMBDALAYER_ARN='arn:aws:lambda:us-east-2:084828578926:layer:tweeterLambdaLayer:7'
