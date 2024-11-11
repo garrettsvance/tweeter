@@ -19,12 +19,15 @@ export type { UserDto } from "./model/dto/UserDto";
 // Requests
 //
 export type { PagedUserItemRequest } from "./model/net/request/PagedUserItemRequest";
+export type { GetFolloweeCountRequest } from "./model/net/request/GetFolloweeCountRequest";
+export type { TweeterRequest } from "./model/net/request/TweeterRequest";
 
 //
 // Responses
 //
 export type { PagedUserItemResponse } from "./model/net/response/PagedUserItemResponse";
-
+export type { GetFolloweeCountResponse } from "./model/net/response/GetFolloweeCountResponse";
+export type { TweeterResponse } from "./model/net/response/TweeterResponse";
 //
 // Other
 //
