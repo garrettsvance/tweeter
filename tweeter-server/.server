@@ -7,4 +7,4 @@ tweeterFollow | lambda/follow/FollowLambda.handler
 tweeterUnfollow | lambda/follow/UnfollowLambda.handler
 tweeterLogin | lambda/user/LoginLambda.handler
 '
-LAMBDALAYER_ARN='arn:aws:lambda:us-east-2:084828578926:layer:tweeterLambdaLayer:11'
+LAMBDALAYER_ARN='arn:aws:lambda:us-east-2:084828578926:layer:tweeterLambdaLayer:13'
