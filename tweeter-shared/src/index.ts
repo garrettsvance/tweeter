@@ -14,6 +14,7 @@ export { AuthToken } from "./model/domain/AuthToken";
 // DTOs
 //
 export type { UserDto } from "./model/dto/UserDto";
+export type { AuthTokenDto } from "./model/dto/AuthTokenDto";
 
 //
 // Requests
@@ -23,6 +24,7 @@ export type { GetFolloweeCountRequest } from "./model/net/request/GetFolloweeCou
 export type { TweeterRequest } from "./model/net/request/TweeterRequest";
 export type { FollowRequest } from "./model/net/request/FollowRequest";
 export type { UnfollowRequest } from "./model/net/request/UnfollowRequest";
+export type { LoginRequest } from "./model/net/request/LoginRequest";
 
 //
 // Responses
@@ -32,6 +34,7 @@ export type { GetFolloweeCountResponse } from "./model/net/response/GetFolloweeC
 export type { TweeterResponse } from "./model/net/response/TweeterResponse";
 export type { FollowResponse } from "./model/net/response/FollowResponse";
 export type { UnfollowResponse } from "./model/net/response/UnfollowResponse";
+export type { LoginResponse } from "./model/net/response/LoginResponse";
 
 //
 // Other
