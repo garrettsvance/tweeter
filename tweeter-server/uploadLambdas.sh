@@ -26,6 +26,7 @@ do
         aws lambda update-function-code \
             --function-name  "$function_name" \
             --s3-bucket $BUCKET \
+            --s3-bucket $BUCKET \
             --s3-key code/lambdalist.zip \
             1>>/dev/null \
             &
