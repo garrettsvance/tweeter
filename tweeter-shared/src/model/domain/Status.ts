@@ -1,6 +1,7 @@
 import { PostSegment, Type } from "./PostSegment";
 import { User } from "./User";
 import { format } from "date-fns";
+import { StatusDto } from "../dto/StatusDto";
 
 export class Status {
   private _post: string;
@@ -27,8 +28,8 @@ export class Status {
             post.substring(startIndex, reference.startPostion),
             startIndex,
             reference.startPostion - 1,
-            Type.text
-          )
+            Type.text,
+          ),
         );
       }
 
@@ -43,8 +44,8 @@ export class Status {
           post.substring(startIndex),
           startIndex,
           post.length,
-          Type.text
-        )
+          Type.text,
+        ),
       );
     }
 
@@ -78,7 +79,7 @@ export class Status {
       if (startIndex > -1) {
         // Push the url
         references.push(
-          new PostSegment(url, startIndex, startIndex + url.length, Type.url)
+          new PostSegment(url, startIndex, startIndex + url.length, Type.url),
         );
 
         // Move start and previous start past the url
@@ -154,8 +155,8 @@ export class Status {
             mention,
             startIndex,
             startIndex + mention.length,
-            Type.alias
-          )
+            Type.alias,
+          ),
         );
 
         // Move start and previous start past the mention
@@ -191,7 +192,7 @@ export class Status {
     while ((match = regex.exec(post)) !== null) {
       const matchIndex = match.index;
       newlines.push(
-        new PostSegment("\n", matchIndex, matchIndex + 1, Type.newline)
+        new PostSegment("\n", matchIndex, matchIndex + 1, Type.newline),
       );
     }
 
@@ -262,9 +263,9 @@ export class Status {
           jsonObject._user._firstName,
           jsonObject._user._lastName,
           jsonObject._user._alias,
-          jsonObject._user._imageUrl
+          jsonObject._user._imageUrl,
         ),
-        jsonObject._timestamp
+        jsonObject._timestamp,
       );
     } else {
       return null;
@@ -273,5 +274,30 @@ export class Status {
 
   public toJson(): string {
     return JSON.stringify(this);
+  }
+
+  public toDto(): StatusDto {
+    return {
+      post: this._post,
+      user: this._user.toDto(),
+      timestamp: this._timestamp,
+    };
+  }
+
+  public get dto(): StatusDto {
+    return this.toDto();
+  }
+
+  public static fromDto(dto: StatusDto | null): Status | null {
+    if (dto === null) {
+      return null;
+    }
+
+    const user = User.fromDto(dto.user);
+    if (user === null) {
+      throw new Error("Invalid UserDto in StatusDto");
+    }
+
+    return new Status(dto.post, user, dto.timestamp);
   }
 }

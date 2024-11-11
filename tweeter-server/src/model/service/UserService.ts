@@ -1,11 +1,11 @@
-import { AuthToken, FakeData, User } from "tweeter-shared";
+import { AuthToken, AuthTokenDto, FakeData, UserDto } from "tweeter-shared";
 import { Buffer } from "buffer";
 
 export class UserService {
   public async login(
     alias: string,
     password: string,
-  ): Promise<[User, AuthToken]> {
+  ): Promise<[UserDto, AuthTokenDto]> {
     // TODO: Replace with the result of calling the server
     const user = FakeData.instance.firstUser;
 
@@ -13,7 +13,7 @@ export class UserService {
       throw new Error("Invalid alias or password");
     }
 
-    return [user, FakeData.instance.authToken];
+    return [user.toDto(), FakeData.instance.authToken.toDto()];
   }
 
   public async register(
@@ -23,7 +23,7 @@ export class UserService {
     password: string,
     userImageBytes: Uint8Array,
     imageFileExtension: string,
-  ): Promise<[User, AuthToken]> {
+  ): Promise<[UserDto, AuthTokenDto]> {
     // Not needed now, but will be needed when you make the request to the server in milestone 3
     const imageStringBase64: string =
       Buffer.from(userImageBytes).toString("base64");
@@ -35,13 +35,10 @@ export class UserService {
       throw new Error("Invalid registration");
     }
 
-    return [user, FakeData.instance.authToken];
+    return [user.toDto(), FakeData.instance.authToken.toDto()];
   }
 
-  public async getUser(
-    authToken: AuthToken,
-    alias: string,
-  ): Promise<User | null> {
+  public async getUser(token: string, alias: string): Promise<UserDto | null> {
     // TODO: Replace with the result of calling server
     return FakeData.instance.findUserByAlias(alias);
   }
