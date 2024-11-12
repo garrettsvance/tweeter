@@ -28,6 +28,7 @@ export type { LoginRequest } from "./model/net/request/LoginRequest";
 export type { LogoutRequest } from "./model/net/request/LogoutRequest";
 export type { RegisterRequest } from "./model/net/request/RegisterRequest";
 export type { GetFollowerCountRequest } from "./model/net/request/GetFollowerCountRequest";
+export type { GetUserRequest } from "./model/net/request/GetUserRequest";
 
 //
 // Responses
@@ -41,6 +42,7 @@ export type { LoginResponse } from "./model/net/response/LoginResponse";
 export type { LogoutResponse } from "./model/net/response/LogoutResponse";
 export type { RegisterResponse } from "./model/net/response/RegisterResponse";
 export type { GetFollowerCountResponse } from "./model/net/response/GetFollowerCountResponse";
+export type { GetUserResponse } from "./model/net/response/GetUserResponse";
 
 //
 // Other
