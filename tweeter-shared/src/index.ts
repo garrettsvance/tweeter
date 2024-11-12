@@ -31,6 +31,7 @@ export type { RegisterRequest } from "./model/net/request/RegisterRequest";
 export type { GetFollowerCountRequest } from "./model/net/request/GetFollowerCountRequest";
 export type { GetUserRequest } from "./model/net/request/GetUserRequest";
 export type { PagedStatusItemRequest } from "./model/net/request/PagedStatusItemRequest";
+export type { PostStatusRequest } from "./model/net/request/PostStatusRequest";
 
 //
 // Responses
@@ -46,6 +47,7 @@ export type { RegisterResponse } from "./model/net/response/RegisterResponse";
 export type { GetFollowerCountResponse } from "./model/net/response/GetFollowerCountResponse";
 export type { GetUserResponse } from "./model/net/response/GetUserResponse";
 export type { PagedStatusItemResponse } from "./model/net/response/PagedStatusItemResponse";
+export type { PostStatusResponse } from "./model/net/response/PostStatusResponse";
 
 //
 // Other
