@@ -1,4 +1,10 @@
-import { AuthToken, FakeData, User, UserDto } from "tweeter-shared";
+import {
+  AuthToken,
+  AuthTokenDto,
+  FakeData,
+  User,
+  UserDto,
+} from "tweeter-shared";
 
 export class FollowService {
   public async loadMoreFollowers(
@@ -52,7 +58,7 @@ export class FollowService {
   }
 
   public async getIsFollowerStatus(
-    authToken: AuthToken,
+    authToken: AuthTokenDto,
     userDto: UserDto,
     selecteduserDto: UserDto,
   ): Promise<boolean> {

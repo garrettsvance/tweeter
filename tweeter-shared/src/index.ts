@@ -32,6 +32,7 @@ export type { GetFollowerCountRequest } from "./model/net/request/GetFollowerCou
 export type { GetUserRequest } from "./model/net/request/GetUserRequest";
 export type { PagedStatusItemRequest } from "./model/net/request/PagedStatusItemRequest";
 export type { PostStatusRequest } from "./model/net/request/PostStatusRequest";
+export type { GetIsFollowerRequest } from "./model/net/request/GetIsFollowerRequest";
 
 //
 // Responses
@@ -48,6 +49,7 @@ export type { GetFollowerCountResponse } from "./model/net/response/GetFollowerC
 export type { GetUserResponse } from "./model/net/response/GetUserResponse";
 export type { PagedStatusItemResponse } from "./model/net/response/PagedStatusItemResponse";
 export type { PostStatusResponse } from "./model/net/response/PostStatusResponse";
+export type { GetIsFollowerResponse } from "./model/net/response/GetIsFollowerResponse";
 
 //
 // Other
