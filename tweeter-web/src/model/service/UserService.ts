@@ -1,4 +1,12 @@
-import { AuthToken, FakeData, LoginRequest, User } from "tweeter-shared";
+import {
+  AuthToken,
+  FakeData,
+  GetUserRequest,
+  LoginRequest,
+  LogoutRequest,
+  RegisterRequest,
+  User,
+} from "tweeter-shared";
 import { Buffer } from "buffer";
 import { ServerFacade } from "../../network/ServerFacade";
 
@@ -9,7 +17,6 @@ export class UserService {
     alias: string,
     password: string,
   ): Promise<[User, AuthToken]> {
-    // TODO: Replace with the result of calling the server
     const request: LoginRequest = {
       alias: alias,
       password: password,
@@ -25,30 +32,34 @@ export class UserService {
     userImageBytes: Uint8Array,
     imageFileExtension: string,
   ): Promise<[User, AuthToken]> {
-    // Not needed now, but will be needed when you make the request to the server in milestone 3
     const imageStringBase64: string =
       Buffer.from(userImageBytes).toString("base64");
-
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("Invalid registration");
-    }
-
-    return [user, FakeData.instance.authToken];
+    const request: RegisterRequest = {
+      firstName: firstName,
+      lastName: lastName,
+      alias: alias,
+      password: password,
+      userImageBase64: imageStringBase64,
+      imageFileExtension: imageFileExtension,
+    };
+    return await this.serverFacade.register(request);
   }
 
   public async getUser(
     authToken: AuthToken,
     alias: string,
   ): Promise<User | null> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.findUserByAlias(alias);
+    const request: GetUserRequest = {
+      authToken: authToken.toDto(),
+      alias: alias,
+    };
+    return await this.serverFacade.getUser(request);
   }
 
   public async logout(authToken: AuthToken): Promise<void> {
-    // Pause so we can see the logging out message. Delete when the call to the server is implemented.
-    await new Promise((res) => setTimeout(res, 1000));
+    const request: LogoutRequest = {
+      authToken: authToken.toDto(),
+    };
+    await this.serverFacade.logout(request);
   }
 }
