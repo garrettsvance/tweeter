@@ -1,14 +1,31 @@
-import { AuthToken, FakeData, Status } from "tweeter-shared";
+import {
+  AuthToken,
+  FakeData,
+  PagedStatusItemRequest,
+  PostStatusRequest,
+  Status,
+  StatusDto,
+} from "tweeter-shared";
+import { ServerFacade } from "../../network/ServerFacade";
+import PostStatus from "../../components/postStatus/PostStatus";
 
 export class StatusService {
+  private serverFacade = ServerFacade.getInstance();
+
   public async loadMoreStoryItems(
     authToken: AuthToken,
     userAlias: string,
     pageSize: number,
     lastItem: Status | null,
   ): Promise<[Status[], boolean]> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+    const request: PagedStatusItemRequest = {
+      token: authToken.token,
+      authToken: authToken.toDto(),
+      userAlias: userAlias,
+      pageSize: pageSize,
+      lastItem: lastItem ? lastItem.toDto() : null,
+    };
+    return await this.serverFacade.getMoreStoryItems(request);
   }
 
   public async loadMoreFeedItems(
@@ -17,17 +34,25 @@ export class StatusService {
     pageSize: number,
     lastItem: Status | null,
   ): Promise<[Status[], boolean]> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+    const request: PagedStatusItemRequest = {
+      token: authToken.token,
+      authToken: authToken.toDto(),
+      userAlias: userAlias,
+      pageSize: pageSize,
+      lastItem: lastItem ? lastItem.toDto() : null,
+    };
+    return await this.serverFacade.getMoreFeedItems(request);
   }
 
   public async postStatus(
     authToken: AuthToken,
     newStatus: Status,
   ): Promise<void> {
-    // Pause so we can see the logging out message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
-
-    // TODO: Call the server to post the status
+    const request: PostStatusRequest = {
+      token: authToken.token,
+      authToken: authToken.toDto(),
+      status: newStatus.toDto() as StatusDto,
+    };
+    return await this.serverFacade.postStatus(request);
   }
 }
