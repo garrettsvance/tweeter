@@ -38,7 +38,10 @@ export class UserService {
     return [user.toDto(), FakeData.instance.authToken.toDto()];
   }
 
-  public async getUser(token: string, alias: string): Promise<UserDto | null> {
+  public async getUser(
+    authToken: AuthTokenDto,
+    alias: string,
+  ): Promise<UserDto | null> {
     // TODO: Replace with the result of calling server
     return FakeData.instance.findUserByAlias(alias);
   }

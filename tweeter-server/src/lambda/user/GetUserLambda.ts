@@ -5,7 +5,7 @@ export const handler = async (
   request: GetUserRequest,
 ): Promise<GetUserResponse> => {
   const userService = new UserService();
-  const userDto = await userService.getUser(request.token, request.alias);
+  const userDto = await userService.getUser(request.authToken, request.alias);
 
   return {
     success: true,

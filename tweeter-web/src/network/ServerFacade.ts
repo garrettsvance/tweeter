@@ -34,7 +34,7 @@ import {
 export class ServerFacade {
   private static instance: ServerFacade;
   private SERVER_URL =
-    "https://hhx5pg1c5c.execute-api.us-east-2.amazonaws.com/dev";
+    "https://8g1uyx0lqk.execute-api.us-east-2.amazonaws.com/dev";
   private clientCommunicator: ClientCommunicator;
 
   private constructor() {

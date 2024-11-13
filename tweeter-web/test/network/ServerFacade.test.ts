@@ -22,7 +22,7 @@ describe("ServerFacade Tests", () => {
 
     const [user, authToken] = await serverFacade.register(registerRequest);
     expect(user).toBeDefined();
-    expect(user.alias).toBe("testAlias");
+    expect(user.alias).toBe("@allen");
     expect(authToken).not.toBeNull();
   });
 
