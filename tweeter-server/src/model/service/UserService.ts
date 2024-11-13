@@ -1,4 +1,10 @@
-import { AuthToken, AuthTokenDto, FakeData, UserDto } from "tweeter-shared";
+import {
+  AuthToken,
+  AuthTokenDto,
+  FakeData,
+  User,
+  UserDto,
+} from "tweeter-shared";
 import { Buffer } from "buffer";
 
 export class UserService {
@@ -42,8 +48,8 @@ export class UserService {
     authToken: AuthTokenDto,
     alias: string,
   ): Promise<UserDto | null> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.findUserByAlias(alias);
+    const user: User | null = FakeData.instance.findUserByAlias(alias);
+    return user ? user.toDto() : null;
   }
 
   public async logout(authToken: AuthTokenDto): Promise<void> {
