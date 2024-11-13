@@ -49,6 +49,9 @@ export class UserService {
     alias: string,
   ): Promise<UserDto | null> {
     const user: User | null = FakeData.instance.findUserByAlias(alias);
+    if (user === null) {
+      console.log("getUser returned null value");
+    }
     return user ? user.toDto() : null;
   }
 

@@ -104,13 +104,4 @@ export class User {
       imageUrl: this.imageUrl,
     };
   }
-
-  public toGetUserDto(): UserDto {
-    return {
-      firstName: this._firstName,
-      lastName: this._lastName,
-      alias: this._alias,
-      imageUrl: this._imageUrl,
-    };
-  }
 }
