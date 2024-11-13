@@ -18,7 +18,6 @@ describe("ServerFacade Tests", () => {
       password: "password",
       userImageBase64: "string",
       imageFileExtension: "string",
-      token: "token",
     };
 
     const [user, authToken] = await serverFacade.register(registerRequest);

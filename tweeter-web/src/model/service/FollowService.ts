@@ -83,6 +83,7 @@ export class FollowService {
     userToFollow: User,
   ): Promise<[followerCount: number, followeeCount: number]> {
     const request: FollowRequest = {
+      token: authToken.token,
       userToFollow: userToFollow.toDto(),
     };
     return await this.serverFacade.follow(request);
@@ -93,6 +94,7 @@ export class FollowService {
     userToUnfollow: User,
   ): Promise<[followerCount: number, followeeCount: number]> {
     const request: UnfollowRequest = {
+      token: authToken.token,
       userToUnfollow: userToUnfollow.toDto(),
     };
     return await this.serverFacade.unfollow(request);
