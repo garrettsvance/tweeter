@@ -68,6 +68,7 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
       this.view.setIsFollower(true);
       this.view.setFollowerCount(followerCount);
       this.view.setFolloweeCount(followeeCount);
+      this.view.setIsLoading(false);
     }, "follow user");
   }
 
@@ -82,13 +83,14 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
         2000,
       );
 
-      let [followerCount, followeeCount] = await this.followService.follow(
+      let [followerCount, followeeCount] = await this.followService.unfollow(
         authToken!,
         userToUnfollow!,
       );
       this.view.setIsFollower(false);
       this.view.setFollowerCount(followerCount);
       this.view.setFolloweeCount(followeeCount);
+      this.view.setIsLoading(false);
     }, "unfollow displayed user");
   }
 }
