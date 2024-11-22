@@ -1,24 +1,31 @@
-import {
-  AuthToken,
-  AuthTokenDto,
-  FakeData,
-  User,
-  UserDto,
-} from "tweeter-shared";
+import { AuthTokenDto, FakeData, User, UserDto } from "tweeter-shared";
+import { FollowsDAO } from "../dao/interface/FollowsDAO";
+import { UserDAO } from "../dao/interface/UserDAO";
+import { DAOFactory } from "../dao/factory/DAOFactory";
 
 export class FollowService {
+  private factoryDAO: DAOFactory;
+  private followDAO: FollowsDAO;
+  private userDAO: UserDAO;
+
+  constructor(factoryDAO: DAOFactory) {
+    this.factoryDAO = factoryDAO;
+    this.userDAO = factoryDAO.getUserDAO();
+    this.followDAO = factoryDAO.getFollowsDAO();
+  }
+
   public async loadMoreFollowers(
     token: string,
     userAlias: string,
     pageSize: number,
     lastItem: UserDto | null,
   ): Promise<[UserDto[], boolean]> {
-    const [items, hasMore] = FakeData.instance.getPageOfUsers(
+    const [items, hasMore] = await this.followDAO.getFollowers(
       User.fromDto(lastItem),
       pageSize,
       userAlias,
     );
-    return [items.map((user) => user.dto), hasMore];
+    return [items, hasMore]; // [items.map((user) => user.dto), hasMore];
   }
 
   public async loadMoreFollowees(
@@ -27,12 +34,12 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDto | null,
   ): Promise<[UserDto[], boolean]> {
-    const [items, hasMore] = FakeData.instance.getPageOfUsers(
+    const [items, hasMore] = await this.followDAO.getFollowees(
       User.fromDto(lastItem),
       pageSize,
       userAlias,
     );
-    return [items.map((user) => user.dto), hasMore];
+    return [items, hasMore]; // [items.map((user) => user.dto), hasMore];
   }
 
   private async getFakeData(
@@ -54,7 +61,10 @@ export class FollowService {
     userDto: UserDto,
   ): Promise<number> {
     // TODO: Replace with the result of calling server
-    return FakeData.instance.getFollowerCount(userDto.alias);
+    const followerNum = await this.followDAO.getNumFollower(userDto.alias);
+    if (!followerNum || followerNum < 0) {
+      throw new Error("Error retreiving number of followers");
+    }
   }
 
   public async getFolloweeCount(
