@@ -12,4 +12,12 @@ export interface FollowsDAO {
     pageSize: number,
     userAlias: string,
   ): Promise<[followers: UserDto[], hasMore: boolean]>;
+
+  getNumFollower(alias: string): Promise<number>;
+  getNumFollowee(alias: string): Promise<number>;
+
+  getIsFollower(alias: string, aliasToFollow: string): Promise<boolean>;
+
+  followAction(token: string, userToFollow: string): Promise<void>;
+  unfollowAction(token: string, userToUnfollow: string): Promise<void>;
 }

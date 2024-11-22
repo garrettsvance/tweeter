@@ -63,8 +63,9 @@ export class FollowService {
     // TODO: Replace with the result of calling server
     const followerNum = await this.followDAO.getNumFollower(userDto.alias);
     if (!followerNum || followerNum < 0) {
-      throw new Error("Error retreiving number of followers");
+      throw new Error("Error retrieving number of followers");
     }
+    return followerNum;
   }
 
   public async getFolloweeCount(
@@ -72,7 +73,11 @@ export class FollowService {
     userDto: UserDto,
   ): Promise<number> {
     // TODO: Replace with the result of calling server
-    return FakeData.instance.getFollowerCount(userDto.alias);
+    const followeeNum = await this.followDAO.getNumFollowee(userDto.alias);
+    if (!followeeNum || followeeNum < 0) {
+      throw new Error("Error retrieving number of followees");
+    }
+    return followeeNum;
   }
 
   public async getIsFollowerStatus(
@@ -81,7 +86,14 @@ export class FollowService {
     selecteduserDto: UserDto,
   ): Promise<boolean> {
     // TODO: Replace with the result of calling server
-    return FakeData.instance.isFollower();
+    const isFollower = await this.followDAO.getIsFollower(
+      userDto.alias,
+      selecteduserDto.alias,
+    );
+    if (!isFollower) {
+      throw new Error("Error retrieving isFollower status");
+    }
+    return isFollower;
   }
 
   public async follow(
@@ -92,7 +104,11 @@ export class FollowService {
     await new Promise((f) => setTimeout(f, 2000));
 
     // TODO: Call the server
-
+    try {
+      await this.followDAO.followAction(token, userToFollow.alias);
+    } catch (error) {
+      throw new Error("Error: Unable to follow user");
+    }
     const followerCount = await this.getFollowerCount(token, userToFollow);
     const followeeCount = await this.getFolloweeCount(token, userToFollow);
 
@@ -107,7 +123,11 @@ export class FollowService {
     await new Promise((f) => setTimeout(f, 2000));
 
     // TODO: Call the server
-
+    try {
+      await this.followDAO.unfollowAction(token, userToUnfollow.alias);
+    } catch (error) {
+      throw new Error("Error: Unable to follow user");
+    }
     const followerCount = await this.getFollowerCount(token, userToUnfollow);
     const followeeCount = await this.getFolloweeCount(token, userToUnfollow);
 
