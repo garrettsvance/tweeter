@@ -5,8 +5,21 @@ import {
   Status,
   StatusDto,
 } from "tweeter-shared";
+import { DAOFactory } from "../dao/factory/DAOFactory";
+import { StoryDAO } from "../dao/interface/StoryDAO";
+import { SessionsDAO } from "../dao/interface/SessionsDAO";
 
 export class StatusService {
+  private factoryDAO: DAOFactory;
+  private sessionsDAO: SessionsDAO;
+  private storyDAO: StoryDAO;
+
+  constructor(factoryDAO: DAOFactory) {
+    this.factoryDAO = factoryDAO;
+    this.storyDAO = factoryDAO.getStoryDAO();
+    this.sessionsDAO = factoryDAO.getSessionsDAO();
+  }
+
   public async loadMoreStoryItems(
     authToken: AuthTokenDto,
     userAlias: string,

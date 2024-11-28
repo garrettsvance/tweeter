@@ -1,18 +1,24 @@
-import { AuthTokenDto, User, UserDto } from "tweeter-shared";
+import { AuthToken, AuthTokenDto, User, UserDto } from "tweeter-shared";
 import { Buffer } from "buffer";
 import { DAOFactory } from "../dao/factory/DAOFactory";
 import { UserDAO } from "../dao/interface/UserDAO";
 import { SessionsDAO } from "../dao/interface/SessionsDAO";
+import { GetCommand } from "@aws-sdk/lib-dynamodb";
+import bcrypt, { hash } from "bcryptjs";
+import { compare } from "bcryptjs";
+import { S3DAO } from "../dao/interface/S3DAO";
 
 export class UserService {
   private factoryDAO: DAOFactory;
   private sessionsDAO: SessionsDAO;
   private userDAO: UserDAO;
+  private s3DAO: S3DAO;
 
   constructor(factoryDAO: DAOFactory) {
     this.factoryDAO = factoryDAO;
     this.userDAO = factoryDAO.getUserDAO();
     this.sessionsDAO = factoryDAO.getSessionsDAO();
+    this.s3DAO = factoryDAO.getS3DAO();
   }
 
   public async login(
@@ -25,14 +31,32 @@ export class UserService {
     if (!password) {
       throw new Error("Password needed to login");
     }
-    const pulledAlias = await this.userDAO.getUser(alias);
-    const pulledPassword = await this.sessionsDAO.createSesh(alias, password);
+    const pulledUser = await this.userDAO.getUser(alias);
 
-    if (!pulledAlias || !pulledPassword) {
+    if (!pulledUser) {
       throw new Error("Error in retrieving alias and/or password");
     }
 
-    return [pulledAlias, pulledPassword];
+    await this.validateUser(alias, password);
+    // TODO: working on changing createSesh to pass in an authtoken, so we don't have DAOs using other DAOs
+    const tokenDto = await this.createSesh();
+
+    return [pulledUser, tokenDto];
+  }
+
+  public async createSesh(): Promise<AuthTokenDto> {
+    const authToken = AuthToken.Generate();
+    await this.sessionsDAO.createSession(authToken);
+    return authToken.toDto();
+  }
+
+  public async validateUser(alias: string, password: string): Promise<boolean> {
+    const passwordHash = await this.userDAO.getHashedPassword(alias);
+    const validated = await bcrypt.compare(passwordHash, password);
+    if (!validated) {
+      throw new Error("Unable to validate user");
+    }
+    return validated;
   }
 
   public async register(
@@ -43,39 +67,42 @@ export class UserService {
     userImageBytes: Uint8Array,
     imageFileExtension: string,
   ): Promise<[UserDto, AuthTokenDto]> {
-    // Not needed now, but will be needed when you make the request to the server in milestone 3
-    const imageStringBase64: string =
-      Buffer.from(userImageBytes).toString("base64");
-
-    // TODO: Replace with the result of calling the server
-    const foundUser = await this.userDAO.getUser(alias);
-
-    if (foundUser) {
-      throw new Error("Invalid registration");
+    if (await this.userDAO.getUser(alias)) {
+      throw new Error("User already exists");
     }
 
-    const createdUser: UserDto = new User(
-      firstName,
-      lastName,
+    if (
+      imageFileExtension !== "image/jpeg" &&
+      imageFileExtension !== "image/png"
+    ) {
+      throw new Error("Invalid file type for profile picture");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const bufferedImage = Buffer.from(userImageBytes);
+
+    const imageUrl = await this.s3DAO.uploadPfp(
       alias,
-      imageStringBase64,
-    ).dto; // TODO: check for s3?
-    const associatePassword = await this.sessionsDAO.associatePassword(
-      alias,
-      password,
+      bufferedImage,
+      imageFileExtension,
     );
-    const sesh = await this.sessionsDAO.createSesh(alias, password);
-    const addedUser = await this.userDAO.addUser(createdUser);
-    if (!associatePassword || !sesh || !addedUser) {
-      throw new Error("Error registering user (dao)");
+
+    const createdUser = new User(firstName, lastName, alias, imageUrl);
+    try {
+      await this.userDAO.associatePasswordAddUser(createdUser, hashedPassword);
+    } catch {
+      throw new Error("Unable to add user");
     }
-    return [addedUser, sesh];
+    const tokenDto = await this.createSesh();
+
+    return [createdUser.toDto(), tokenDto];
   }
 
   public async getUser(
     authToken: AuthTokenDto,
     alias: string,
   ): Promise<UserDto | null> {
+    const tokenCheck = await this.sessionsDAO.verifySession(authToken);
     const user: UserDto | null = await this.userDAO.getUser(alias);
     if (user === null) {
       console.log("getUser returned null value");

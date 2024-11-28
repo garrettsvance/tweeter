@@ -253,6 +253,7 @@ export class Status {
           _lastName: string;
           _alias: string;
           _imageUrl: string;
+          _hashedPassword?: string;
         };
         _timestamp: number;
         _segments: PostSegment[];

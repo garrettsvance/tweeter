@@ -8,6 +8,11 @@
   "author": "JWilkerson",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.699.0",
+    "@aws-sdk/client-s3": "^3.701.0",
+    "@aws-sdk/lib-dynamodb": "^3.699.0",
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^2.4.3",
     "isomorphic-fetch": "^3.0.0",
     "node": "^22.9.0",
     "rimraf": "^5.0.5",
