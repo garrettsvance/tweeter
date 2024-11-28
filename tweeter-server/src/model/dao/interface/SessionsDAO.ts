@@ -1,6 +1,6 @@
-import { AuthToken } from "tweeter-shared";
+import { AuthToken, AuthTokenDto } from "tweeter-shared";
 
 export interface SessionsDAO {
   createSession(authToken: AuthToken): Promise<void>;
-  verifySession(authToken: AuthToken): Promise<boolean>;
+  verifySession(authToken: AuthTokenDto): Promise<boolean>;
 }

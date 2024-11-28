@@ -4,7 +4,7 @@ import {
   GetItemCommand,
   PutItemCommand,
 } from "@aws-sdk/client-dynamodb";
-import { AuthToken } from "tweeter-shared";
+import { AuthToken, AuthTokenDto } from "tweeter-shared";
 import { SessionsDAO } from "../interface/SessionsDAO";
 
 export class SessionsDAODynamo implements SessionsDAO {
@@ -30,7 +30,7 @@ export class SessionsDAODynamo implements SessionsDAO {
     }
   }
 
-  public async verifySession(authToken: AuthToken): Promise<boolean> {
+  public async verifySession(authToken: AuthTokenDto): Promise<boolean> {
     const params = {
       TableName: this.tableName,
       Key: {
@@ -40,11 +40,12 @@ export class SessionsDAODynamo implements SessionsDAO {
 
     try {
       const response = await this.client.send(new GetItemCommand(params));
-      const foundToken = response.Item ? !!response.Item.token : false;
-      const timedOut = response.Item
-        ? Date.now() - response.Item.timestamp <= this.expirationTime
-        : false;
-      return result != null;
+      if (!response.Item) {
+        return false;
+      }
+      const tokenTimestamp = response.Item.timestamp as unknown as number;
+      const timedOut = Date.now() - tokenTimestamp > this.expirationTime;
+      return !timedOut;
     } catch {
       throw new Error("Error verifying session");
     }
