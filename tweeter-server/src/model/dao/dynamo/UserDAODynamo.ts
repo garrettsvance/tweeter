@@ -1,11 +1,6 @@
 import { UserDAO } from "../interface/UserDAO";
-import { User, UserDto } from "tweeter-shared";
-import { compare, genSalt, hash } from "bcryptjs";
-import {
-  DynamoDBDocumentClient,
-  GetCommand,
-  PutCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { User } from "tweeter-shared";
+import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 import {
   DynamoDBClient,
   GetItemCommand,
@@ -39,8 +34,27 @@ export class UserDAODynamo implements UserDAO {
     }
   }
 
-  getUser(alias: string): Promise<UserDto | null> {
-    return Promise.resolve(undefined);
+  public async getUser(alias: string): Promise<User | null> {
+    const params = {
+      TableName: this.tableName,
+      Key: {
+        alias,
+      },
+    };
+    try {
+      const result = await this.client.send(new GetCommand(params));
+      if (!result.Item) {
+        return null;
+      }
+      return new User(
+        result.Item.firstName,
+        result.Item.lastName,
+        result.Item.alias,
+        result.Item.imageUrl,
+      );
+    } catch (error) {
+      throw new Error("Error getting user");
+    }
   } //TODO: promise should be dto or string?
 
   async getHashedPassword(alias: string): Promise<string> {
