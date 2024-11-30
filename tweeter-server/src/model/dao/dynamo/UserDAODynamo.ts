@@ -1,16 +1,14 @@
 import { UserDAO } from "../interface/UserDAO";
 import { User } from "tweeter-shared";
-import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 import {
-  DynamoDBClient,
-  GetItemCommand,
-  PutItemCommand,
-} from "@aws-sdk/client-dynamodb";
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+} from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 export class UserDAODynamo implements UserDAO {
-  private readonly tableName = "tweeter-users"; // TODO: figure out if i should just make it all one table for users
-  private readonly alias = "alias";
-  private readonly password = "password";
+  private readonly tableName = "tweeter-users";
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
   async associatePasswordAddUser(
@@ -20,15 +18,15 @@ export class UserDAODynamo implements UserDAO {
     const params = {
       TableName: this.tableName,
       Item: {
-        alias: { S: user.alias },
-        firstName: { S: user.firstName },
-        lastName: { S: user.lastName },
-        imageUrl: { S: user.imageUrl },
-        hashedPassword: { S: hashedPassword },
+        alias: user.alias,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        imageUrl: user.imageUrl,
+        hashedPassword: hashedPassword,
       },
     };
     try {
-      await this.client.send(new PutItemCommand(params));
+      await this.client.send(new PutCommand(params));
     } catch {
       throw new Error("Error adding user");
     }
@@ -55,20 +53,20 @@ export class UserDAODynamo implements UserDAO {
     } catch (error) {
       throw new Error("Error getting user");
     }
-  } //TODO: promise should be dto or string?
+  }
 
   async getHashedPassword(alias: string): Promise<string> {
     const params = {
       TableName: this.tableName,
       Key: {
-        alias: { S: alias },
+        alias: alias,
       },
       ProjectionExpression: "hashedPassword",
     };
 
-    const result = await this.client.send(new GetItemCommand(params));
-    if (result.Item && result.Item.hashedPassword?.S) {
-      return result.Item.hashedPassword.S;
+    const result = await this.client.send(new GetCommand(params));
+    if (result.Item && result.Item.hashedPassword) {
+      return result.Item.hashedPassword;
     }
     throw new Error("Missing password hash");
   }
