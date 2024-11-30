@@ -1,16 +1,14 @@
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import {
-  DynamoDBClient,
-  GetItemCommand,
-  PutItemCommand,
-} from "@aws-sdk/client-dynamodb";
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+} from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { AuthToken, AuthTokenDto } from "tweeter-shared";
 import { SessionsDAO } from "../interface/SessionsDAO";
 
 export class SessionsDAODynamo implements SessionsDAO {
   private readonly tableName = "tweeter-sessions";
-  private readonly token = "token";
-  private readonly timestamp = "timestamp";
   private readonly expirationTime = 60 * 60 * 1000; // 1 hour expiration
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
@@ -18,13 +16,13 @@ export class SessionsDAODynamo implements SessionsDAO {
     const params = {
       TableName: this.tableName,
       Item: {
-        token: { S: authToken.token },
-        timestamp: { N: authToken.timestamp.toString() },
+        token: authToken.token,
+        timestamp: authToken.timestamp.toString(),
       },
     };
 
     try {
-      await this.client.send(new PutItemCommand(params));
+      await this.client.send(new PutCommand(params));
     } catch {
       throw new Error("Error adding session");
     }
@@ -34,12 +32,12 @@ export class SessionsDAODynamo implements SessionsDAO {
     const params = {
       TableName: this.tableName,
       Key: {
-        token: { S: authToken.token },
+        token: authToken.token,
       },
     };
 
     try {
-      const response = await this.client.send(new GetItemCommand(params));
+      const response = await this.client.send(new GetCommand(params));
       if (!response.Item) {
         return false;
       }
