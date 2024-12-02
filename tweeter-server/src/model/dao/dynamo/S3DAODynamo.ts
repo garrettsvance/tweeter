@@ -10,7 +10,7 @@ export class S3DAODynamo implements S3DAO {
   private readonly bucket = "";
   private readonly region = "";
 
-  public async uploadPfp(
+  public async putImage(
     alias: string,
     buffer: Buffer,
     imageType: string,

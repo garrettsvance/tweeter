@@ -38,7 +38,6 @@ export class UserService {
     }
 
     await this.validateUser(alias, password);
-    // TODO: working on changing createSesh to pass in an authtoken, so we don't have DAOs using other DAOs
     const tokenDto = await this.createSesh();
 
     return [pulledUser, tokenDto];
@@ -81,7 +80,7 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(password, 10);
     const bufferedImage = Buffer.from(userImageBytes);
 
-    const imageUrl = await this.s3DAO.uploadPfp(
+    const imageUrl = await this.s3DAO.putImage(
       alias,
       bufferedImage,
       imageFileExtension,

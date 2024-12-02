@@ -1,5 +1,5 @@
 export interface S3DAO {
-  uploadPfp(
+  putImage(
     alias: string,
     imageBuffer: Buffer,
     imageFileExtension: string,

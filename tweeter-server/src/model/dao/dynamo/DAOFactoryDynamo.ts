@@ -6,14 +6,15 @@ import {SessionsDAO} from "../interface/SessionsDAO";
 import {StoryDAO} from "../interface/StoryDAO";
 import {UserDAODynamo} from "./UserDAODynamo";
 import {SessionsDAODynamo} from "./SessionsDAODynamo";
+import {FeedDAODynamo} from "./FeedDAODynamo";
 
 export class DAOFactoryDynamo implements DAOFactory {
     public getUserDAO() {
         return new UserDAODynamo();
     }
 
-    readonly getFeedDAO(): FeedDAO {
-        return undefined;
+    public getFeedDAO(): FeedDAO {
+        return new FeedDAODynamo();
     }
 
     readonly getFollowsDAO(): FollowsDAO {
