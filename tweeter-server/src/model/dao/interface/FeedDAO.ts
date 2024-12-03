@@ -6,5 +6,10 @@ export interface FeedDAO {
     pageSize: number,
     hasMore?: StatusDto | null,
   ): Promise<[StatusDto[], boolean]>;
-  addStatus(user: UserDto, status: StatusDto): Promise<void>;
+  createFollowersFeed(
+    user: UserDto,
+    userFollowers: string[],
+    status: StatusDto,
+  ): Promise<void>;
+  //addStatus(user: UserDto, status: StatusDto): Promise<void>;
 }

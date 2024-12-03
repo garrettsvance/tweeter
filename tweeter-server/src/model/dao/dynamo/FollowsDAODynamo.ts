@@ -120,6 +120,52 @@ export class FollowsDAODynamo implements FollowsDAO {
     }
   }
 
+  public async getFollowerAliases(userAlias: string): Promise<string[]> {
+    console.log(`Getting follower aliases for user: ${userAlias}`);
+
+    try {
+      const params: QueryCommandInput = {
+        TableName: this.tableName,
+        IndexName: this.indexName,
+        KeyConditionExpression: "#followee = :alias",
+        ExpressionAttributeNames: {
+          "#followee": this.followeeAlias,
+        },
+        ExpressionAttributeValues: {
+          ":alias": userAlias,
+        },
+        ProjectionExpression: this.followerAlias,
+      };
+
+      const followerAliases: string[] = [];
+      let lastEvaluatedKey: Record<string, any> | undefined;
+
+      do {
+        if (lastEvaluatedKey) {
+          params.ExclusiveStartKey = lastEvaluatedKey;
+        }
+
+        const response = await this.client.send(new QueryCommand(params));
+
+        if (response.Items) {
+          followerAliases.push(
+            ...response.Items.map((item) => item[this.followerAlias]),
+          );
+        }
+
+        lastEvaluatedKey = response.LastEvaluatedKey;
+      } while (lastEvaluatedKey);
+
+      console.log(
+        `Retrieved ${followerAliases.length} follower aliases for ${userAlias}`,
+      );
+      return followerAliases;
+    } catch (error) {
+      console.error("Error retrieving follower aliases", error);
+      throw new Error("Failed to retrieve follower aliases");
+    }
+  }
+
   //TODO: double check the differences with index and table names, and use that when searching for your information
   // for followers and followees
 

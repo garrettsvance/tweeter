@@ -1,27 +1,23 @@
-import {
-  AuthToken,
-  AuthTokenDto,
-  FakeData,
-  Status,
-  StatusDto,
-} from "tweeter-shared";
+import { AuthTokenDto, Status, StatusDto } from "tweeter-shared";
 import { DAOFactory } from "../dao/factory/DAOFactory";
 import { StoryDAO } from "../dao/interface/StoryDAO";
-import { SessionsDAO } from "../dao/interface/SessionsDAO";
 import { FeedDAO } from "../dao/interface/FeedDAO";
 import { StatusDAO } from "../dao/interface/StatusDAO";
+import { FollowsDAO } from "../dao/interface/FollowsDAO";
 
 export class StatusService {
   private factoryDAO: DAOFactory;
   private feedDAO: FeedDAO;
   private storyDAO: StoryDAO;
   private statusDAO: StatusDAO;
+  private followsDAO: FollowsDAO;
 
   constructor(factoryDAO: DAOFactory) {
     this.factoryDAO = factoryDAO;
     this.storyDAO = factoryDAO.getStoryDAO();
     this.feedDAO = factoryDAO.getFeedDAO();
     this.statusDAO = factoryDAO.getStatusDAO();
+    this.followsDAO = factoryDAO.getFollowsDAO();
   }
 
   public async loadMoreStoryItems(
@@ -53,7 +49,12 @@ export class StatusService {
     const userAlias = newStatus.user;
     try {
       await this.statusDAO.createStatus(status);
-      await this.feedDAO.addStatus(userAlias, newStatus);
+      const followers = await this.followsDAO.getFollowerAliases(
+        userAlias.alias,
+      );
+      if (followers.length > 0) {
+        await this.feedDAO.createFollowersFeed(userAlias, followers, newStatus);
+      }
     } catch (error) {
       console.error("Error posting status", error);
     }

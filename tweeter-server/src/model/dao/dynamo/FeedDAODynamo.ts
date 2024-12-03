@@ -3,7 +3,6 @@ import { Status, StatusDto, User, UserDto } from "tweeter-shared";
 import {
   BatchWriteCommand,
   DynamoDBDocumentClient,
-  PutCommand,
   QueryCommand,
   QueryCommandInput,
 } from "@aws-sdk/lib-dynamodb";
@@ -61,30 +60,7 @@ export class FeedDAODynamo implements FeedDAO {
     }
   }
 
-  public async addStatus(user: UserDto, status: StatusDto): Promise<void> {
-    console.log(`Adding status for user: ${user.alias}`);
-    const params = {
-      TableName: this.tableName,
-      Item: {
-        alias: user.alias,
-        timestamp: status.timestamp,
-        originalPoster: user.alias,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        imageUrl: user.imageUrl,
-        status: status.post,
-      },
-    };
-    try {
-      await this.client.send(new PutCommand(params));
-      console.log("Status added successfully");
-    } catch (error) {
-      console.error("Error in addStatus:", error);
-      throw new Error("Failed to add status");
-    }
-  }
-
-  public async pullFeed(
+  public async createFollowersFeed(
     user: UserDto,
     userFollowers: string[],
     status: StatusDto,
@@ -122,4 +98,27 @@ export class FeedDAODynamo implements FeedDAO {
       throw new Error("Failed to pull feed");
     }
   }
+
+  // public async addStatus(user: UserDto, status: StatusDto): Promise<void> {
+  //   console.log(`Adding status for user: ${user.alias}`);
+  //   const params = {
+  //     TableName: this.tableName,
+  //     Item: {
+  //       alias: user.alias,
+  //       timestamp: status.timestamp,
+  //       author: user.alias,
+  //       firstName: user.firstName,
+  //       lastName: user.lastName,
+  //       imageUrl: user.imageUrl,
+  //       status: status.post,
+  //     },
+  //   };
+  //   try {
+  //     await this.client.send(new PutCommand(params));
+  //     console.log("Status added successfully");
+  //   } catch (error) {
+  //     console.error("Error in addStatus:", error);
+  //     throw new Error("Failed to add status");
+  //   }
+  // }
 }
