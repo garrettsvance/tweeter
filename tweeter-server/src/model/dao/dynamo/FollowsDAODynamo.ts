@@ -6,19 +6,19 @@ import {
   GetCommand,
   PutCommand,
   QueryCommand,
+  QueryCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 export class FollowsDAODynamo implements FollowsDAO {
   private readonly tableName: string = "tweeter-follows";
-  private readonly followerIndex: string = "followerIndex";
-  private readonly followeeIndex: string = "followeeIndex";
   private readonly followerName: string = "followerName";
   private readonly followerAlias: string = "followerAlias";
   private readonly followerImage: string = "followerImage";
   private readonly followeeName: string = "followeeName";
   private readonly followeeAlias: string = "followeeAlias";
   private readonly followeeImage: string = "followeeImage";
+  private readonly indexName: string = "follows-index";
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
   public async followAction(follower: string, followee: string): Promise<void> {
@@ -44,10 +44,10 @@ export class FollowsDAODynamo implements FollowsDAO {
   ): Promise<[followers: UserDto[], hasMore: boolean]> {
     const params = {
       TableName: this.tableName,
-      IndexName: this.followerIndex,
-      KeyConditionExpression: "#followee = :alias",
+      IndexName: this.indexName,
+      KeyConditionExpression: "#follower = :alias",
       ExpressionAttributeNames: {
-        "#followee": this.followeeAlias,
+        "#follower": this.followerAlias,
       },
       ExpressionAttributeValues: {
         ":alias": userAlias,
@@ -81,10 +81,9 @@ export class FollowsDAODynamo implements FollowsDAO {
   ): Promise<[followers: UserDto[], hasMore: boolean]> {
     const params = {
       TableName: this.tableName,
-      IndexName: this.followerIndex,
-      KeyConditionExpression: "#follower = :alias",
+      KeyConditionExpression: "#followee = :alias",
       ExpressionAttributeNames: {
-        "#follower": this.followerAlias,
+        "#followee": this.followeeAlias,
       },
       ExpressionAttributeValues: {
         ":alias": userAlias,
@@ -120,25 +119,62 @@ export class FollowsDAODynamo implements FollowsDAO {
   ): Promise<boolean> {
     const params = {
       TableName: this.tableName,
-      Key: {
+      IndexName: this.indexName,
+      KeyConditionExpression:
+        "followerAlias = :alias AND followeeAlias = :aliasToFollow",
+      ExpressionAttributeValues: {
         followerAlias: alias,
         followeeAlias: aliasToFollow,
       },
+      Limit: 1,
     };
     try {
-      const response = await this.client.send(new GetCommand(params));
-      return response.Item != null;
+      const response = await this.client.send(new QueryCommand(params));
+      return !!(response.Items && response.Items.length > 0);
     } catch {
       throw new Error("Error getting isFollower status");
     }
   }
 
-  getNumFollowee(alias: string): Promise<number> {
-    return Promise.resolve(0); // select: select.COUNT
+  public async getNumFollowee(alias: string): Promise<number> {
+    const params: QueryCommandInput = {
+      TableName: this.tableName,
+      IndexName: this.indexName,
+      KeyConditionExpression: "#follower = :alias",
+      ExpressionAttributeNames: {
+        "#follower": this.followerAlias,
+      },
+      ExpressionAttributeValues: {
+        ":alias": alias,
+      },
+      Select: "COUNT",
+    };
+    try {
+      const result = await this.client.send(new QueryCommand(params));
+      return result.Count ?? 0;
+    } catch {
+      throw new Error("Error retrieving numFollowee");
+    }
   }
 
-  getNumFollower(alias: string): Promise<number> {
-    return Promise.resolve(0);
+  public async getNumFollower(alias: string): Promise<number> {
+    const params: QueryCommandInput = {
+      TableName: this.tableName,
+      KeyConditionExpression: "followee = :alias",
+      ExpressionAttributeNames: {
+        "#followee": this.followeeAlias,
+      },
+      ExpressionAttributeValues: {
+        alias: alias,
+      },
+      Select: "COUNT",
+    };
+    try {
+      const result = await this.client.send(new QueryCommand(params));
+      return result.Count ?? 0;
+    } catch {
+      throw new Error("Error retrieving numFollower");
+    }
   }
 
   public async unfollowAction(
