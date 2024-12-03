@@ -78,7 +78,7 @@ export class UserService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const bufferedImage = Buffer.from(userImageBytes);
+    const bufferedImage = Buffer.from(userImageBytes).toString("base64");
 
     const imageUrl = await this.s3DAO.putImage(
       alias,

@@ -35,12 +35,12 @@ export class UserService {
     const imageStringBase64: string =
       Buffer.from(userImageBytes).toString("base64");
     const request: RegisterRequest = {
-      firstName: firstName,
-      lastName: lastName,
-      alias: alias,
-      password: password,
-      userImageBase64: imageStringBase64,
-      imageFileExtension: imageFileExtension,
+      firstName,
+      lastName,
+      alias,
+      password,
+      userImageBytes,
+      imageFileExtension,
     };
     return await this.serverFacade.register(request);
   }

@@ -62,7 +62,11 @@ export class ServerFacade {
         : null;
 
     if (items === null) {
-      throw new Error(`No followees found`);
+      throw new Error(
+        `No followees found for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     } else {
       return [items, response.hasMore];
     }
@@ -82,7 +86,11 @@ export class ServerFacade {
         : null;
 
     if (items === null) {
-      throw new Error(`No followers found`);
+      throw new Error(
+        `No followers found for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     } else {
       return [items, response.hasMore];
     }
@@ -99,7 +107,11 @@ export class ServerFacade {
     if (response.success) {
       return response.count;
     } else {
-      throw new Error(`Could not get followee count`);
+      throw new Error(
+        `Failed to get followee count for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -114,7 +126,11 @@ export class ServerFacade {
     if (response.success) {
       return response.count;
     } else {
-      throw new Error(`Could not get follower count`);
+      throw new Error(
+        `Failed to get follower count for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -127,7 +143,11 @@ export class ServerFacade {
     if (response.success) {
       return [response.followerCount, response.followeeCount];
     } else {
-      throw new Error(`Could not do follow request`);
+      throw new Error(
+        `Failed to follow user for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -140,7 +160,11 @@ export class ServerFacade {
     if (response.success) {
       return [response.followerCount, response.followeeCount];
     } else {
-      throw new Error(`Could not do unfollow request`);
+      throw new Error(
+        `Failed to unfollow user for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -155,7 +179,11 @@ export class ServerFacade {
       const authToken = AuthToken.fromDto(response.authToken as AuthTokenDto);
       return [user as User, authToken as AuthToken];
     } else {
-      throw new Error(`Could not do login request`);
+      throw new Error(
+        `Login failed for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -166,7 +194,11 @@ export class ServerFacade {
     >(request, "/logout");
 
     if (!response.success) {
-      throw new Error(`Could not do logout request`);
+      throw new Error(
+        `Logout failed for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -181,7 +213,11 @@ export class ServerFacade {
       const authToken = AuthToken.fromDto(response.authToken as AuthTokenDto);
       return [user as User, authToken as AuthToken];
     } else {
-      throw new Error(`Could not do register request`);
+      throw new Error(
+        `Registration failed for request: ${JSON.stringify(request.alias)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -194,7 +230,11 @@ export class ServerFacade {
     if (response.success) {
       return response.user ? User.fromDto(response.user as UserDto) : null;
     } else {
-      throw new Error(`Could not do getUser request`);
+      throw new Error(
+        `Failed to get user for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -213,12 +253,20 @@ export class ServerFacade {
 
     if (response.success) {
       if (items === null) {
-        throw new Error(`Could not get story items`);
+        throw new Error(
+          `No story items found for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+            response,
+          )}`,
+        );
       } else {
         return [items, response.hasMore];
       }
     } else {
-      throw new Error(`Could not get story items`);
+      throw new Error(
+        `Failed to get story items for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -237,12 +285,20 @@ export class ServerFacade {
 
     if (response.success) {
       if (items === null) {
-        throw new Error(`Could not get feed items`);
+        throw new Error(
+          `No feed items found for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+            response,
+          )}`,
+        );
       } else {
         return [items, response.hasMore];
       }
     } else {
-      throw new Error(`Could not get feed items`);
+      throw new Error(
+        `Failed to get feed items for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -252,7 +308,11 @@ export class ServerFacade {
       PostStatusResponse
     >(request, "/post");
     if (!response.success) {
-      throw new Error(`Could not post status`);
+      throw new Error(
+        `Failed to post status for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 
@@ -265,7 +325,11 @@ export class ServerFacade {
     if (response.success) {
       return response.isFollower;
     } else {
-      throw new Error(`Could not check follower status`);
+      throw new Error(
+        `Failed to check follower status for request: ${JSON.stringify(request)}. Response: ${JSON.stringify(
+          response,
+        )}`,
+      );
     }
   }
 }

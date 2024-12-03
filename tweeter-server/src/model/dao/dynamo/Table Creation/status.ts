@@ -9,7 +9,7 @@ import {
 // aws dynamodb describe-table --table-name tweeter-status --output json
 
 const createStatusTable = async () => {
-  const client = new DynamoDBClient({ region: "us-east-1" }); // Adjust the region if needed
+  const client = new DynamoDBClient({});
 
   const params = {
     TableName: "tweeter-status",

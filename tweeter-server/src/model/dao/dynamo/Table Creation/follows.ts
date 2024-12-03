@@ -2,6 +2,8 @@ import {
   DynamoDBClient,
   CreateTableCommand,
   KeyType,
+  ScalarAttributeType,
+  ProjectionType,
 } from "@aws-sdk/client-dynamodb";
 
 const client = new DynamoDBClient({});
@@ -17,22 +19,22 @@ const createFollowsTable = async () => {
       { AttributeName: "followeeAlias", KeyType: KeyType.RANGE }, // Sort Key
     ],
     AttributeDefinitions: [
-      { AttributeName: "followerAlias", AttributeType: "S" }, // Primary Key Partition
-      { AttributeName: "followeeAlias", AttributeType: "S" }, // Primary Key Sort Key
+      { AttributeName: "followerAlias", AttributeType: ScalarAttributeType.S },
+      { AttributeName: "followeeAlias", AttributeType: ScalarAttributeType.S },
     ],
     ProvisionedThroughput: {
-      ReadCapacityUnits: 1, // Adjust based on Free Tier limits
-      WriteCapacityUnits: 1, // Adjust based on Free Tier limits
+      ReadCapacityUnits: 1,
+      WriteCapacityUnits: 1,
     },
     GlobalSecondaryIndexes: [
       {
         IndexName: "follows-index",
         KeySchema: [
-          { AttributeName: "followeeAlias", KeyType: "HASH" }, // GSI Partition Key
-          { AttributeName: "followerAlias", KeyType: "RANGE" }, // GSI Sort Key
+          { AttributeName: "followeeAlias", KeyType: KeyType.HASH }, // GSI Partition Key
+          { AttributeName: "followerAlias", KeyType: KeyType.RANGE }, // GSI Sort Key
         ],
         Projection: {
-          ProjectionType: "ALL", // Include all attributes in the index
+          ProjectionType: ProjectionType.ALL, // Include all attributes in the index
         },
         ProvisionedThroughput: {
           ReadCapacityUnits: 1,
