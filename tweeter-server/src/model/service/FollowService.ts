@@ -2,16 +2,19 @@ import { AuthTokenDto, FakeData, User, UserDto } from "tweeter-shared";
 import { FollowsDAO } from "../dao/interface/FollowsDAO";
 import { UserDAO } from "../dao/interface/UserDAO";
 import { DAOFactory } from "../dao/factory/DAOFactory";
+import { SessionsDAO } from "../dao/interface/SessionsDAO";
 
 export class FollowService {
   private factoryDAO: DAOFactory;
   private followDAO: FollowsDAO;
   private userDAO: UserDAO;
+  private sessionDAO: SessionsDAO;
 
   constructor(factoryDAO: DAOFactory) {
     this.factoryDAO = factoryDAO;
     this.userDAO = factoryDAO.getUserDAO();
     this.followDAO = factoryDAO.getFollowsDAO();
+    this.sessionDAO = factoryDAO.getSessionsDAO();
   }
 
   public async loadMoreFollowers(
@@ -60,7 +63,6 @@ export class FollowService {
     token: string,
     userDto: UserDto,
   ): Promise<number> {
-    // TODO: Replace with the result of calling server
     const followerNum = await this.followDAO.getNumFollower(userDto.alias);
     if (!followerNum || followerNum < 0) {
       throw new Error("Error retrieving number of followers");
@@ -72,7 +74,6 @@ export class FollowService {
     token: string,
     userDto: UserDto,
   ): Promise<number> {
-    // TODO: Replace with the result of calling server
     const followeeNum = await this.followDAO.getNumFollowee(userDto.alias);
     if (!followeeNum || followeeNum < 0) {
       throw new Error("Error retrieving number of followees");
@@ -83,12 +84,11 @@ export class FollowService {
   public async getIsFollowerStatus(
     authToken: AuthTokenDto,
     userDto: UserDto,
-    selecteduserDto: UserDto,
+    selectedUserDto: UserDto,
   ): Promise<boolean> {
-    // TODO: Replace with the result of calling server
     const isFollower = await this.followDAO.getIsFollower(
       userDto.alias,
-      selecteduserDto.alias,
+      selectedUserDto.alias,
     );
     if (!isFollower) {
       throw new Error("Error retrieving isFollower status");
@@ -100,12 +100,16 @@ export class FollowService {
     token: string,
     userToFollow: UserDto,
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Pause so we can see the follow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
-
-    // TODO: Call the server
     try {
-      await this.followDAO.followAction(token, userToFollow.alias);
+      const alias = await this.sessionDAO.getAliasFromToken(token);
+      const userDto = await this.userDAO.getUser(alias);
+      const user = User.fromDto(userDto);
+      const followUser = User.fromDto(userToFollow);
+      if (!user || !followUser) {
+        throw new Error(`No user found using alias: ${alias}`);
+      }
+
+      await this.followDAO.followAction(user, followUser);
     } catch (error) {
       throw new Error("Error: Unable to follow user");
     }
@@ -119,10 +123,6 @@ export class FollowService {
     token: string,
     userToUnfollow: UserDto,
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Pause so we can see the unfollow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
-
-    // TODO: Call the server
     try {
       await this.followDAO.unfollowAction(token, userToUnfollow.alias);
     } catch (error) {

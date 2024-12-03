@@ -8,53 +8,54 @@ import {
 import { DAOFactory } from "../dao/factory/DAOFactory";
 import { StoryDAO } from "../dao/interface/StoryDAO";
 import { SessionsDAO } from "../dao/interface/SessionsDAO";
+import { FeedDAO } from "../dao/interface/FeedDAO";
+import { StatusDAO } from "../dao/interface/StatusDAO";
 
 export class StatusService {
   private factoryDAO: DAOFactory;
-  private sessionsDAO: SessionsDAO;
+  private feedDAO: FeedDAO;
   private storyDAO: StoryDAO;
+  private statusDAO: StatusDAO;
 
   constructor(factoryDAO: DAOFactory) {
     this.factoryDAO = factoryDAO;
     this.storyDAO = factoryDAO.getStoryDAO();
-    this.sessionsDAO = factoryDAO.getSessionsDAO();
+    this.feedDAO = factoryDAO.getFeedDAO();
+    this.statusDAO = factoryDAO.getStatusDAO();
   }
 
   public async loadMoreStoryItems(
     authToken: AuthTokenDto,
-    userAlias: string,
+    alias: string,
     pageSize: number,
     lastItem: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
-    // TODO: Replace with the result of calling server
-    const [statuses, hasMore] = FakeData.instance.getPageOfStatuses(
-      Status.fromDto(lastItem),
-      pageSize,
-    );
-    return [statuses.map((status) => status.dto), hasMore];
+    return await this.storyDAO.getPageOfStatuses(alias, pageSize, lastItem);
   }
 
   public async loadMoreFeedItems(
     authToken: AuthTokenDto,
-    userAlias: string,
+    alias: string,
     pageSize: number,
     lastItem: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
-    // TODO: Replace with the result of calling server
-    const [statuses, hasMore] = FakeData.instance.getPageOfStatuses(
-      Status.fromDto(lastItem),
-      pageSize,
-    );
-    return [statuses.map((status) => status.dto), hasMore];
+    return await this.feedDAO.getFeed(alias, pageSize, lastItem);
   }
 
   public async postStatus(
     authToken: AuthTokenDto,
     newStatus: StatusDto,
   ): Promise<void> {
-    // Pause so we can see the logging out message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
-
-    // TODO: Call the server to post the status
+    const status = Status.fromDto(newStatus);
+    if (!status) {
+      throw new Error("Status returned null");
+    }
+    const userAlias = newStatus.user;
+    try {
+      await this.statusDAO.createStatus(status);
+      await this.feedDAO.addStatus(userAlias, newStatus);
+    } catch (error) {
+      console.error("Error posting status", error);
+    }
   }
 }

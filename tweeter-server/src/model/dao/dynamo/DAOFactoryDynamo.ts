@@ -1,36 +1,44 @@
-import {DAOFactory} from "../factory/DAOFactory";
-import {FeedDAO} from "../interface/FeedDAO";
-import {FollowsDAO} from "../interface/FollowsDAO";
-import {S3DAO} from "../interface/S3DAO";
-import {SessionsDAO} from "../interface/SessionsDAO";
-import {StoryDAO} from "../interface/StoryDAO";
-import {UserDAODynamo} from "./UserDAODynamo";
-import {SessionsDAODynamo} from "./SessionsDAODynamo";
-import {FeedDAODynamo} from "./FeedDAODynamo";
+import { DAOFactory } from "../factory/DAOFactory";
+import { FeedDAO } from "../interface/FeedDAO";
+import { FollowsDAO } from "../interface/FollowsDAO";
+import { S3DAO } from "../interface/S3DAO";
+import { SessionsDAO } from "../interface/SessionsDAO";
+import { StoryDAO } from "../interface/StoryDAO";
+import { UserDAODynamo } from "./UserDAODynamo";
+import { SessionsDAODynamo } from "./SessionsDAODynamo";
+import { FeedDAODynamo } from "./FeedDAODynamo";
+import { FollowsDAODynamo } from "./FollowsDAODynamo";
+import { S3DAODynamo } from "./S3DAODynamo";
+import { StoryDAODynamo } from "./StoryDAODynamo";
+import { StatusDAO } from "../interface/StatusDAO";
+import { StatusDAODynamo } from "./StatusDAODynamo";
 
 export class DAOFactoryDynamo implements DAOFactory {
-    public getUserDAO() {
-        return new UserDAODynamo();
-    }
+  public getUserDAO() {
+    return new UserDAODynamo();
+  }
 
-    public getFeedDAO(): FeedDAO {
-        return new FeedDAODynamo();
-    }
+  public getFeedDAO(): FeedDAO {
+    return new FeedDAODynamo();
+  }
 
-    readonly getFollowsDAO(): FollowsDAO {
-        return undefined;
-    }
+  public getFollowsDAO(): FollowsDAO {
+    return new FollowsDAODynamo();
+  }
 
-    readonly getS3DAO(): S3DAO {
-        return undefined;
-    }
+  public getS3DAO(): S3DAO {
+    return new S3DAODynamo();
+  }
 
-    public getSessionsDAO(): SessionsDAO {
-        return new SessionsDAODynamo();
-    }
+  public getSessionsDAO(): SessionsDAO {
+    return new SessionsDAODynamo();
+  }
 
-    readonly getStoryDAO(): StoryDAO {
-        return undefined;
-    }
+  public getStoryDAO(): StoryDAO {
+    return new StoryDAODynamo();
+  }
 
+  public getStatusDAO(): StatusDAO {
+    return new StatusDAODynamo();
+  }
 }

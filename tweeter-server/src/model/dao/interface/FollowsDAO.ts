@@ -18,6 +18,6 @@ export interface FollowsDAO {
 
   getIsFollower(alias: string, aliasToFollow: string): Promise<boolean>;
 
-  followAction(token: string, userToFollow: string): Promise<void>;
+  followAction(token: User, userToFollow: User): Promise<void>;
   unfollowAction(token: string, userToUnfollow: string): Promise<void>;
 }

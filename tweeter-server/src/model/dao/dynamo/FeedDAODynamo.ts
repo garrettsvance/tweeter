@@ -72,6 +72,7 @@ export class FeedDAODynamo implements FeedDAO {
   }
 
   public async pullFeed(
+    //TODO: find implementations of functions within dynamos, create tables
     user: UserDto,
     userFollowers: string[],
     status: StatusDto,

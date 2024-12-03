@@ -3,11 +3,12 @@ import {
   PagedStatusItemRequest,
   PagedStatusItemResponse,
 } from "tweeter-shared";
+import { getStatusService } from "../utils";
 
 export const handler = async (
   request: PagedStatusItemRequest,
 ): Promise<PagedStatusItemResponse> => {
-  const service = new StatusService();
+  const service = getStatusService();
   const [items, hasMore] = await service.loadMoreStoryItems(
     request.authToken,
     request.userAlias,

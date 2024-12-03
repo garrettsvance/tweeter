@@ -17,6 +17,9 @@ export class StoryDAODynamo implements StoryDAO {
     pageSize: number,
     hasMore?: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
+    console.log(
+      `Fetching page of statuses for alias: ${alias}, pageSize: ${pageSize}`,
+    );
     const params: QueryCommandInput = {
       TableName: this.tableName,
       KeyConditionExpression: "alias = :alias",
@@ -24,30 +27,42 @@ export class StoryDAODynamo implements StoryDAO {
         ":alias": alias,
       },
       Limit: pageSize,
+      ScanIndexForward: false,
       ExclusiveStartKey: hasMore
         ? {
             alias: alias,
-            timestamp: hasMore.timestamp.toString(),
+            timestamp: hasMore.timestamp,
           }
         : undefined,
     };
-    const response = await this.client.send(new QueryCommand(params));
-    const feed = response.Items
-      ? response.Items.map(
-          (item) =>
-            new Status(
-              item.post,
-              new User(
-                item.firstName,
-                item.lastName,
-                item.alias,
-                item.imageUrl,
-              ),
-              item.timestamp,
-            ).dto,
-        )
-      : [];
-    const hasMoreBool = !!response.LastEvaluatedKey;
-    return [feed, hasMoreBool];
+    try {
+      const response = await this.client.send(new QueryCommand(params));
+
+      const feed = response.Items
+        ? response.Items.map(
+            (item) =>
+              new Status(
+                item.post,
+                new User(
+                  item.firstName,
+                  item.lastName,
+                  item.alias,
+                  item.imageUrl,
+                ),
+                item.timestamp,
+              ).dto,
+          )
+        : [];
+
+      const hasMoreBool = !!response.LastEvaluatedKey;
+
+      console.log(
+        `Retrieved ${feed.length} statuses. Has more: ${hasMoreBool}`,
+      );
+      return [feed, hasMoreBool];
+    } catch (error) {
+      console.error("Error in getPageOfStatuses:", error);
+      throw new Error("Failed to retrieve statuses");
+    }
   }
 }

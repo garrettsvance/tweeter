@@ -38,14 +38,14 @@ export class UserService {
     }
 
     await this.validateUser(alias, password);
-    const tokenDto = await this.createSesh();
+    const tokenDto = await this.createSesh(pulledUser);
 
     return [pulledUser, tokenDto];
   }
 
-  public async createSesh(): Promise<AuthTokenDto> {
+  public async createSesh(user: UserDto): Promise<AuthTokenDto> {
     const authToken = AuthToken.Generate();
-    await this.sessionsDAO.createSession(authToken);
+    await this.sessionsDAO.createSession(authToken, user);
     return authToken.toDto();
   }
 
@@ -92,7 +92,7 @@ export class UserService {
     } catch {
       throw new Error("Unable to add user");
     }
-    const tokenDto = await this.createSesh();
+    const tokenDto = await this.createSesh(createdUser.toDto());
 
     return [createdUser.toDto(), tokenDto];
   }

@@ -21,18 +21,24 @@ export class FollowsDAODynamo implements FollowsDAO {
   private readonly indexName: string = "follows-index";
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
-  public async followAction(follower: string, followee: string): Promise<void> {
+  public async followAction(follower: User, followee: User): Promise<void> {
     const params = {
       TableName: this.tableName,
       Item: {
-        followerAlias: follower,
-        followeeAlias: followee,
+        followerAlias: follower.alias,
+        followeeAlias: followee.alias,
+        followerName: `${follower.firstName}, ${follower.lastName}`,
+        followerImage: follower.imageUrl,
+        followeeName: `${followee.firstName}, ${followee.lastName}`,
+        followeeImage: followee.imageUrl,
       },
     };
 
     try {
       await this.client.send(new PutCommand(params));
-    } catch {
+      console.log(`Successfully followed: ${followee} by ${follower}`);
+    } catch (error) {
+      console.error("Error in followAction:", error);
       throw new Error("Error following user");
     }
   }
@@ -44,7 +50,6 @@ export class FollowsDAODynamo implements FollowsDAO {
   ): Promise<[followers: UserDto[], hasMore: boolean]> {
     const params = {
       TableName: this.tableName,
-      IndexName: this.indexName,
       KeyConditionExpression: "#follower = :alias",
       ExpressionAttributeNames: {
         "#follower": this.followerAlias,
@@ -58,7 +63,7 @@ export class FollowsDAODynamo implements FollowsDAO {
       const response = await this.client.send(new QueryCommand(params));
       const followees = response.Items
         ? response.Items.map((item) => {
-            const [firstName, lastName] = item[this.followeeName].split(", ");
+            const [lastName, firstName] = item[this.followeeName].split(", ");
             return new User(
               firstName,
               lastName,
@@ -68,9 +73,11 @@ export class FollowsDAODynamo implements FollowsDAO {
           })
         : [];
       const hasMore = !!response.LastEvaluatedKey;
+      console.log(`Retrieved ${followees.length} followees for ${userAlias}`);
       return [followees, hasMore];
-    } catch {
-      throw new Error("Error retrieving followers");
+    } catch (error) {
+      console.error("Error in getFollowees:", error);
+      throw new Error("Error retrieving followees");
     }
   }
 
@@ -81,6 +88,7 @@ export class FollowsDAODynamo implements FollowsDAO {
   ): Promise<[followers: UserDto[], hasMore: boolean]> {
     const params = {
       TableName: this.tableName,
+      IndexName: this.indexName,
       KeyConditionExpression: "#followee = :alias",
       ExpressionAttributeNames: {
         "#followee": this.followeeAlias,
@@ -104,8 +112,10 @@ export class FollowsDAODynamo implements FollowsDAO {
           })
         : [];
       const hasMore = !!response.LastEvaluatedKey;
+      console.log(`Retrieved ${followers.length} followers for ${userAlias}`);
       return [followers, hasMore];
-    } catch {
+    } catch (error) {
+      console.error("Error in getFollowers:", error);
       throw new Error("Error retrieving followers");
     }
   }
@@ -119,19 +129,21 @@ export class FollowsDAODynamo implements FollowsDAO {
   ): Promise<boolean> {
     const params = {
       TableName: this.tableName,
-      IndexName: this.indexName,
       KeyConditionExpression:
         "followerAlias = :alias AND followeeAlias = :aliasToFollow",
       ExpressionAttributeValues: {
-        followerAlias: alias,
-        followeeAlias: aliasToFollow,
+        ":alias": alias,
+        ":aliasToFollow": aliasToFollow,
       },
       Limit: 1,
     };
     try {
       const response = await this.client.send(new QueryCommand(params));
-      return !!(response.Items && response.Items.length > 0);
-    } catch {
+      const isFollower = !!(response.Items && response.Items.length > 0);
+      console.log(`Is ${alias} following ${aliasToFollow}? ${isFollower}`);
+      return isFollower;
+    } catch (error) {
+      console.error("Error in getIsFollower:", error);
       throw new Error("Error getting isFollower status");
     }
   }
@@ -139,7 +151,6 @@ export class FollowsDAODynamo implements FollowsDAO {
   public async getNumFollowee(alias: string): Promise<number> {
     const params: QueryCommandInput = {
       TableName: this.tableName,
-      IndexName: this.indexName,
       KeyConditionExpression: "#follower = :alias",
       ExpressionAttributeNames: {
         "#follower": this.followerAlias,
@@ -151,8 +162,11 @@ export class FollowsDAODynamo implements FollowsDAO {
     };
     try {
       const result = await this.client.send(new QueryCommand(params));
-      return result.Count ?? 0;
-    } catch {
+      const count = result.Count ?? 0;
+      console.log(`Number of followees for ${alias}: ${count}`);
+      return count;
+    } catch (error) {
+      console.error("Error in getNumFollowee:", error);
       throw new Error("Error retrieving numFollowee");
     }
   }
@@ -160,19 +174,23 @@ export class FollowsDAODynamo implements FollowsDAO {
   public async getNumFollower(alias: string): Promise<number> {
     const params: QueryCommandInput = {
       TableName: this.tableName,
-      KeyConditionExpression: "followee = :alias",
+      IndexName: this.indexName,
+      KeyConditionExpression: "#followee = :alias",
       ExpressionAttributeNames: {
         "#followee": this.followeeAlias,
       },
       ExpressionAttributeValues: {
-        alias: alias,
+        ":alias": alias,
       },
       Select: "COUNT",
     };
     try {
       const result = await this.client.send(new QueryCommand(params));
-      return result.Count ?? 0;
-    } catch {
+      const count = result.Count ?? 0;
+      console.log(`Number of followers for ${alias}: ${count}`);
+      return count;
+    } catch (error) {
+      console.error("Error in getNumFollower:", error);
       throw new Error("Error retrieving numFollower");
     }
   }
@@ -191,8 +209,10 @@ export class FollowsDAODynamo implements FollowsDAO {
 
     try {
       await this.client.send(new DeleteCommand(params));
-    } catch {
-      throw new Error("Error following user");
+      console.log(`Successfully unfollowed: ${followee} by ${follower}`);
+    } catch (error) {
+      console.error("Error in unfollowAction:", error);
+      throw new Error("Error unfollowing user");
     }
   }
 }
