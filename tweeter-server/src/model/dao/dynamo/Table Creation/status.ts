@@ -9,13 +9,13 @@ import {
 // aws dynamodb describe-table --table-name tweeter-status --output json
 
 const createStatusTable = async () => {
-  const client = new DynamoDBClient({});
+  const client = new DynamoDBClient({ region: "us-east-1" }); // Adjust the region if needed
 
   const params = {
     TableName: "tweeter-status",
     KeySchema: [
       { AttributeName: "alias", KeyType: KeyType.HASH }, // Partition key
-      { AttributeName: "timestamp", KeyType: KeyType.RANGE }, // Sort key
+      { AttributeName: "timestamp", KeyType: KeyType.RANGE }, // Sort key for ordering statuses
     ],
     AttributeDefinitions: [
       { AttributeName: "alias", AttributeType: ScalarAttributeType.S },
