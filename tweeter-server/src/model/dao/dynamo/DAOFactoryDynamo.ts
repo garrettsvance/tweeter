@@ -3,13 +3,11 @@ import { FeedDAO } from "../interface/FeedDAO";
 import { FollowsDAO } from "../interface/FollowsDAO";
 import { S3DAO } from "../interface/S3DAO";
 import { SessionsDAO } from "../interface/SessionsDAO";
-import { StoryDAO } from "../interface/StoryDAO";
 import { UserDAODynamo } from "./UserDAODynamo";
 import { SessionsDAODynamo } from "./SessionsDAODynamo";
 import { FeedDAODynamo } from "./FeedDAODynamo";
 import { FollowsDAODynamo } from "./FollowsDAODynamo";
 import { S3DAODynamo } from "./S3DAODynamo";
-import { StoryDAODynamo } from "./StoryDAODynamo";
 import { StatusDAO } from "../interface/StatusDAO";
 import { StatusDAODynamo } from "./StatusDAODynamo";
 
@@ -32,10 +30,6 @@ export class DAOFactoryDynamo implements DAOFactory {
 
   public getSessionsDAO(): SessionsDAO {
     return new SessionsDAODynamo();
-  }
-
-  public getStoryDAO(): StoryDAO {
-    return new StoryDAODynamo();
   }
 
   public getStatusDAO(): StatusDAO {

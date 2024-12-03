@@ -1,6 +1,5 @@
 import { AuthTokenDto, Status, StatusDto } from "tweeter-shared";
 import { DAOFactory } from "../dao/factory/DAOFactory";
-import { StoryDAO } from "../dao/interface/StoryDAO";
 import { FeedDAO } from "../dao/interface/FeedDAO";
 import { StatusDAO } from "../dao/interface/StatusDAO";
 import { FollowsDAO } from "../dao/interface/FollowsDAO";
@@ -8,13 +7,11 @@ import { FollowsDAO } from "../dao/interface/FollowsDAO";
 export class StatusService {
   private factoryDAO: DAOFactory;
   private feedDAO: FeedDAO;
-  private storyDAO: StoryDAO;
   private statusDAO: StatusDAO;
   private followsDAO: FollowsDAO;
 
   constructor(factoryDAO: DAOFactory) {
     this.factoryDAO = factoryDAO;
-    this.storyDAO = factoryDAO.getStoryDAO();
     this.feedDAO = factoryDAO.getFeedDAO();
     this.statusDAO = factoryDAO.getStatusDAO();
     this.followsDAO = factoryDAO.getFollowsDAO();
@@ -26,7 +23,7 @@ export class StatusService {
     pageSize: number,
     lastItem: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
-    return await this.storyDAO.getPageOfStatuses(alias, pageSize, lastItem);
+    return await this.statusDAO.getPageOfStatuses(alias, pageSize, lastItem);
   }
 
   public async loadMoreFeedItems(
