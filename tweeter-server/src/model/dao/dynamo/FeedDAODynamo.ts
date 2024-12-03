@@ -18,6 +18,7 @@ export class FeedDAODynamo implements FeedDAO {
     pageSize: number,
     hasMore?: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
+    console.log(`Fetching feed for alias: ${alias}`);
     const params: QueryCommandInput = {
       TableName: this.tableName,
       KeyConditionExpression: "alias = :alias",
@@ -32,76 +33,93 @@ export class FeedDAODynamo implements FeedDAO {
           }
         : undefined,
     };
-    const response = await this.client.send(new QueryCommand(params));
-    const feed = response.Items
-      ? response.Items.map(
-          (item) =>
-            new Status(
-              item.post,
-              new User(
-                item.firstName,
-                item.lastName,
-                item.alias,
-                item.imageUrl,
-              ),
-              item.timestamp,
-            ).dto,
-        )
-      : [];
-    const hasMoreBool = !!response.LastEvaluatedKey;
-    return [feed, hasMoreBool];
+    try {
+      const response = await this.client.send(new QueryCommand(params));
+      const feed = response.Items
+        ? response.Items.map(
+            (item) =>
+              new Status(
+                item.status,
+                new User(
+                  item.firstName,
+                  item.lastName,
+                  item.originalPoster,
+                  item.imageUrl,
+                ),
+                item.timestamp,
+              ).dto,
+          )
+        : [];
+      const hasMoreBool = !!response.LastEvaluatedKey;
+      console.log(
+        `Retrieved ${feed.length} feed items. Has more: ${hasMoreBool}`,
+      );
+      return [feed, hasMoreBool];
+    } catch (error) {
+      console.error("Error in getFeed:", error);
+      throw new Error("Failed to retrieve feed");
+    }
   }
 
   public async addStatus(user: UserDto, status: StatusDto): Promise<void> {
+    console.log(`Adding status for user: ${user.alias}`);
     const params = {
       TableName: this.tableName,
       Item: {
         alias: user.alias,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        imageUrl: user.imageUrl,
-        status: status.post,
         timestamp: status.timestamp,
-      },
-    };
-    try {
-      await this.client.send(new PutCommand(params));
-    } catch {
-      throw Error("Error adding status");
-    }
-  }
-
-  public async pullFeed(
-    //TODO: find implementations of functions within dynamos, create tables
-    user: UserDto,
-    userFollowers: string[],
-    status: StatusDto,
-  ): Promise<void> {
-    const feedItems = userFollowers.map((follower) => {
-      return {
-        alias: follower,
         originalPoster: user.alias,
         firstName: user.firstName,
         lastName: user.lastName,
         imageUrl: user.imageUrl,
         status: status.post,
-        timestamp: status.timestamp,
-      };
-    });
+      },
+    };
+    try {
+      await this.client.send(new PutCommand(params));
+      console.log("Status added successfully");
+    } catch (error) {
+      console.error("Error in addStatus:", error);
+      throw new Error("Failed to add status");
+    }
+  }
+
+  public async pullFeed(
+    user: UserDto,
+    userFollowers: string[],
+    status: StatusDto,
+  ): Promise<void> {
+    console.log(
+      `Pulling feed for ${userFollowers.length} followers of user: ${user.alias}`,
+    );
+    const feedItems = userFollowers.map((follower) => ({
+      alias: follower,
+      timestamp: status.timestamp,
+      originalPoster: user.alias,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageUrl: user.imageUrl,
+      status: status.post,
+    }));
+
     const request = feedItems.map((item) => ({
       PutRequest: {
         Item: item,
       },
     }));
+
     const params = {
       RequestItems: {
         [this.tableName]: request,
       },
     };
+
     try {
       await this.client.send(new BatchWriteCommand(params));
+      console.log("Feed pulled successfully");
     } catch (error) {
-      throw new Error("Error pulling feed");
+      console.error("Error in pullFeed:", error);
+      throw new Error("Failed to pull feed");
     }
   }
 }
