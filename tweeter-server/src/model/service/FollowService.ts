@@ -64,7 +64,7 @@ export class FollowService {
     userDto: UserDto,
   ): Promise<number> {
     const followerNum = await this.followDAO.getNumFollower(userDto.alias);
-    if (!followerNum || followerNum < 0) {
+    if (!followerNum) {
       throw new Error("Error retrieving number of followers");
     }
     return followerNum;
@@ -75,7 +75,7 @@ export class FollowService {
     userDto: UserDto,
   ): Promise<number> {
     const followeeNum = await this.followDAO.getNumFollowee(userDto.alias);
-    if (!followeeNum || followeeNum < 0) {
+    if (!followeeNum) {
       throw new Error("Error retrieving number of followees");
     }
     return followeeNum;

@@ -66,7 +66,7 @@ export class StatusDAODynamo implements StatusDAO {
         ? response.Items.map(
             (item) =>
               new Status(
-                item.post,
+                item.status, //item.post
                 new User(
                   item.firstName,
                   item.lastName,

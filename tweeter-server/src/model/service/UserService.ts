@@ -49,7 +49,7 @@ export class UserService {
 
   public async validateUser(alias: string, password: string): Promise<boolean> {
     const passwordHash = await this.userDAO.getHashedPassword(alias);
-    const validated = await bcrypt.compare(passwordHash, password);
+    const validated = await bcrypt.compare(password, passwordHash);
     if (!validated) {
       throw new Error("Unable to validate user");
     }

@@ -1,5 +1,5 @@
 import { UserDAO } from "../interface/UserDAO";
-import { User } from "tweeter-shared";
+import { User, UserDto } from "tweeter-shared";
 import {
   DynamoDBDocumentClient,
   GetCommand,
@@ -36,7 +36,7 @@ export class UserDAODynamo implements UserDAO {
     }
   }
 
-  public async getUser(alias: string): Promise<User | null> {
+  public async getUser(alias: string): Promise<UserDto | null> {
     console.log(`Fetching user with alias: ${alias}`);
     const params = {
       TableName: this.tableName,
@@ -57,7 +57,7 @@ export class UserDAODynamo implements UserDAO {
         result.Item.lastName,
         result.Item.alias,
         result.Item.imageUrl,
-      );
+      ).toDto();
     } catch (error) {
       console.error(`Error fetching user with alias: ${alias}`, error);
       throw new Error("Error getting user");

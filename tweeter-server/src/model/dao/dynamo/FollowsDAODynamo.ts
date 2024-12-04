@@ -36,7 +36,9 @@ export class FollowsDAODynamo implements FollowsDAO {
 
     try {
       await this.client.send(new PutCommand(params));
-      console.log(`Successfully followed: ${followee} by ${follower}`);
+      console.log(
+        `Successfully followed: ${followee.alias} by ${follower.alias}`,
+      );
     } catch (error) {
       console.error("Error in followAction:", error);
       throw new Error("Error following user");
