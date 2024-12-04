@@ -3,9 +3,7 @@ import { Buffer } from "buffer";
 import { DAOFactory } from "../dao/factory/DAOFactory";
 import { UserDAO } from "../dao/interface/UserDAO";
 import { SessionsDAO } from "../dao/interface/SessionsDAO";
-import { GetCommand } from "@aws-sdk/lib-dynamodb";
-import bcrypt, { hash } from "bcryptjs";
-import { compare } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { S3DAO } from "../dao/interface/S3DAO";
 
 export class UserService {
@@ -70,11 +68,12 @@ export class UserService {
       throw new Error("User already exists");
     }
 
-    if (
-      imageFileExtension !== "image/jpeg" &&
-      imageFileExtension !== "image/png"
-    ) {
-      throw new Error("Invalid file type for profile picture");
+    const normalizedExtension = imageFileExtension.toLowerCase();
+    const allowedExtensions = new Set(["jpg", "jpeg", "png"]);
+    if (!allowedExtensions.has(normalizedExtension)) {
+      throw new Error(
+        `Invalid file type for profile picture: ${normalizedExtension}`,
+      );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
