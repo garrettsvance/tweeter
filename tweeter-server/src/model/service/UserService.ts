@@ -5,18 +5,21 @@ import { UserDAO } from "../dao/interface/UserDAO";
 import { SessionsDAO } from "../dao/interface/SessionsDAO";
 import bcrypt from "bcryptjs";
 import { S3DAO } from "../dao/interface/S3DAO";
+import { FollowsDAO } from "../dao/interface/FollowsDAO";
 
 export class UserService {
   private factoryDAO: DAOFactory;
   private sessionsDAO: SessionsDAO;
   private userDAO: UserDAO;
   private s3DAO: S3DAO;
+  private followsDAO: FollowsDAO;
 
   constructor(factoryDAO: DAOFactory) {
     this.factoryDAO = factoryDAO;
     this.userDAO = factoryDAO.getUserDAO();
     this.sessionsDAO = factoryDAO.getSessionsDAO();
     this.s3DAO = factoryDAO.getS3DAO();
+    this.followsDAO = factoryDAO.getFollowsDAO();
   }
 
   public async login(
@@ -88,6 +91,7 @@ export class UserService {
     const createdUser = new User(firstName, lastName, alias, imageUrl);
     try {
       await this.userDAO.associatePasswordAddUser(createdUser, hashedPassword);
+      //await this.followsDAO.initializeUser(alias);
     } catch {
       throw new Error("Unable to add user");
     }

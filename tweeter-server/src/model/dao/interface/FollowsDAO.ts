@@ -16,6 +16,8 @@ export interface FollowsDAO {
   getNumFollower(alias: string): Promise<number>;
   getNumFollowee(alias: string): Promise<number>;
 
+  initializeUser(alias: string): Promise<void>;
+
   getIsFollower(alias: string, aliasToFollow: string): Promise<boolean>;
 
   followAction(token: User, userToFollow: User): Promise<void>;

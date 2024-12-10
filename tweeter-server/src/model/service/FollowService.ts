@@ -63,22 +63,22 @@ export class FollowService {
     token: string,
     userDto: UserDto,
   ): Promise<number> {
-    const followerNum = await this.followDAO.getNumFollower(userDto.alias);
-    if (!followerNum) {
+    return await this.followDAO.getNumFollower(userDto.alias);
+    /* if (!followerNum) {
       throw new Error("Error retrieving number of followers");
     }
-    return followerNum;
+    return followerNum;*/
   }
 
   public async getFolloweeCount(
     token: string,
     userDto: UserDto,
   ): Promise<number> {
-    const followeeNum = await this.followDAO.getNumFollowee(userDto.alias);
-    if (!followeeNum) {
+    return await this.followDAO.getNumFollowee(userDto.alias);
+    /*if (!followeeNum) {
       throw new Error("Error retrieving number of followees");
     }
-    return followeeNum;
+    return followeeNum;*/
   }
 
   public async getIsFollowerStatus(

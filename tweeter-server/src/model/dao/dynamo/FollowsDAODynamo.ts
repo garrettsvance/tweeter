@@ -208,15 +208,16 @@ export class FollowsDAODynamo implements FollowsDAO {
       },
       Select: "COUNT",
     };
-    try {
-      const result = await this.client.send(new QueryCommand(params));
-      const count = result.Count ?? 0;
-      console.log(`Number of followees for ${alias}: ${count}`);
-      return count;
-    } catch (error) {
-      console.error("Error in getNumFollowee:", error);
-      throw new Error("Error retrieving numFollowee");
-    }
+    //try {
+    const result = await this.client.send(new QueryCommand(params));
+    const count = result.Count ?? 0;
+    console.log(`Number of followees for ${alias}: ${count}`);
+    return count;
+    // } catch (error) {
+    //console.error("Error in getNumFollowee:", error);
+    //throw new Error("Error retrieving numFollowee");
+    // return 0;
+    //}
   }
 
   public async getNumFollower(alias: string): Promise<number> {
@@ -232,15 +233,16 @@ export class FollowsDAODynamo implements FollowsDAO {
       },
       Select: "COUNT",
     };
-    try {
-      const result = await this.client.send(new QueryCommand(params));
-      const count = result.Count ?? 0;
-      console.log(`Number of followers for ${alias}: ${count}`);
-      return count;
-    } catch (error) {
-      console.error("Error in getNumFollower:", error);
-      throw new Error("Error retrieving numFollower");
-    }
+    // try {
+    const result = await this.client.send(new QueryCommand(params));
+    const count = result.Count ?? 0;
+    console.log(`Number of followers for ${alias}: ${count}`);
+    return count;
+    // } catch (error) {
+    // console.error("Error in getNumFollower:", error);
+    // throw new Error("Error retrieving numFollower");
+    //  return 0;
+    //}
   }
 
   public async unfollowAction(
@@ -261,6 +263,22 @@ export class FollowsDAODynamo implements FollowsDAO {
     } catch (error) {
       console.error("Error in unfollowAction:", error);
       throw new Error("Error unfollowing user");
+    }
+  }
+
+  public async initializeUser(alias: string): Promise<void> {
+    const params = {
+      TableName: this.tableName,
+      Item: {
+        followeeAlias: alias,
+        followerAlias: "initialized",
+      },
+    };
+    try {
+      await this.client.send(new PutCommand(params));
+    } catch (error) {
+      console.error("Error in initializeUser:", error);
+      throw new Error("Error initializing user in follows");
     }
   }
 }
