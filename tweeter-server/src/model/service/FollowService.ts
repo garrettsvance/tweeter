@@ -133,4 +133,8 @@ export class FollowService {
 
     return [followerCount, followeeCount];
   }
+
+  public async getFollowerAliases(alias: string) {
+    return await this.followDAO.getFollowerAliases(alias);
+  }
 }

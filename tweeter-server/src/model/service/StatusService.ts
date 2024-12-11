@@ -1,4 +1,10 @@
-import { AuthTokenDto, Status, StatusDto } from "tweeter-shared";
+import {
+  AuthTokenDto,
+  Status,
+  StatusDto,
+  StatusSQSDto,
+  UserDto,
+} from "tweeter-shared";
 import { DAOFactory } from "../dao/factory/DAOFactory";
 import { FeedDAO } from "../dao/interface/FeedDAO";
 import { StatusDAO } from "../dao/interface/StatusDAO";
@@ -33,6 +39,18 @@ export class StatusService {
     lastItem: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
     return await this.feedDAO.getFeed(alias, pageSize, lastItem);
+  }
+
+  /*public async updateFeeds(status: StatusSQSDto): Promise<void> {
+    await this.feedDAO.updateFeed(status);
+  }*/
+
+  public async createFollowersFeed(
+    user: UserDto,
+    userFollowers: string[],
+    status: StatusDto,
+  ): Promise<void> {
+    return await this.feedDAO.createFollowersFeed(user, userFollowers, status);
   }
 
   public async postStatus(

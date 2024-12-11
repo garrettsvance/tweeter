@@ -1,4 +1,4 @@
-import { StatusDto, UserDto } from "tweeter-shared";
+import { StatusDto, StatusSQSDto, UserDto } from "tweeter-shared";
 
 export interface FeedDAO {
   getFeed(
@@ -11,5 +11,6 @@ export interface FeedDAO {
     userFollowers: string[],
     status: StatusDto,
   ): Promise<void>;
+  //updateFeed(status: StatusSQSDto): Promise<void>;
   //addStatus(user: UserDto, status: StatusDto): Promise<void>;
 }

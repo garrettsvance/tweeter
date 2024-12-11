@@ -1,5 +1,5 @@
 import { FeedDAO } from "../interface/FeedDAO";
-import { Status, StatusDto, User, UserDto } from "tweeter-shared";
+import { Status, StatusDto, StatusSQSDto, User, UserDto } from "tweeter-shared";
 import {
   BatchWriteCommand,
   DynamoDBDocumentClient,
@@ -50,9 +50,9 @@ export class FeedDAODynamo implements FeedDAO {
           )
         : [];
       const hasMoreBool = !!response.LastEvaluatedKey;
-      console.log(
+      /*console.log(
         `Retrieved ${feed.length} feed items. Has more: ${hasMoreBool}`,
-      );
+      );*/
       return [feed, hasMoreBool];
     } catch (error) {
       //console.error("Error in getFeed:", error);
