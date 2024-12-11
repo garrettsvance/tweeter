@@ -27,11 +27,11 @@ export class StatusDAODynamo implements StatusDAO {
     };
     try {
       await this.client.send(new PutCommand(params));
-      console.log(
+      /*console.log(
         `Successfully created status: ${status.post} by ${user.alias}`,
-      );
+      );*/
     } catch (error) {
-      console.error("Error in creating status:", error);
+      //console.error("Error in creating status:", error);
       throw new Error("Error creating status");
     }
   }
@@ -41,9 +41,9 @@ export class StatusDAODynamo implements StatusDAO {
     pageSize: number,
     hasMore?: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
-    console.log(
+    /*console.log(
       `Fetching page of statuses for alias: ${alias}, pageSize: ${pageSize}`,
-    );
+    );*/
     const params: QueryCommandInput = {
       TableName: this.tableName,
       KeyConditionExpression: "alias = :alias",
@@ -80,12 +80,12 @@ export class StatusDAODynamo implements StatusDAO {
 
       const hasMoreBool = !!response.LastEvaluatedKey;
 
-      console.log(
+      /*console.log(
         `Retrieved ${feed.length} statuses. Has more: ${hasMoreBool}`,
-      );
+      );*/
       return [feed, hasMoreBool];
     } catch (error) {
-      console.error("Error in getPageOfStatuses:", error);
+      //console.error("Error in getPageOfStatuses:", error);
       throw new Error("Failed to retrieve statuses");
     }
   }

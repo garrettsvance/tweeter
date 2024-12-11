@@ -36,11 +36,11 @@ export class FollowsDAODynamo implements FollowsDAO {
 
     try {
       await this.client.send(new PutCommand(params));
-      console.log(
+      /*console.log(
         `Successfully followed: ${followee.alias} by ${follower.alias}`,
-      );
+      );*/
     } catch (error) {
-      console.error("Error in followAction:", error);
+      //console.error("Error in followAction:", error);
       throw new Error("Error following user");
     }
   }
@@ -75,10 +75,10 @@ export class FollowsDAODynamo implements FollowsDAO {
           })
         : [];
       const hasMore = !!response.LastEvaluatedKey;
-      console.log(`Retrieved ${followees.length} followees for ${userAlias}`);
+      //console.log(`Retrieved ${followees.length} followees for ${userAlias}`);
       return [followees, hasMore];
     } catch (error) {
-      console.error("Error in getFollowees:", error);
+      //console.error("Error in getFollowees:", error);
       throw new Error("Error retrieving followees");
     }
   }
@@ -114,16 +114,16 @@ export class FollowsDAODynamo implements FollowsDAO {
           })
         : [];
       const hasMore = !!response.LastEvaluatedKey;
-      console.log(`Retrieved ${followers.length} followers for ${userAlias}`);
+      //console.log(`Retrieved ${followers.length} followers for ${userAlias}`);
       return [followers, hasMore];
     } catch (error) {
-      console.error("Error in getFollowers:", error);
+      //console.error("Error in getFollowers:", error);
       throw new Error("Error retrieving followers");
     }
   }
 
   public async getFollowerAliases(userAlias: string): Promise<string[]> {
-    console.log(`Getting follower aliases for user: ${userAlias}`);
+    //console.log(`Getting follower aliases for user: ${userAlias}`);
 
     try {
       const params: QueryCommandInput = {
@@ -158,12 +158,12 @@ export class FollowsDAODynamo implements FollowsDAO {
         lastEvaluatedKey = response.LastEvaluatedKey;
       } while (lastEvaluatedKey);
 
-      console.log(
+      /*console.log(
         `Retrieved ${followerAliases.length} follower aliases for ${userAlias}`,
-      );
+      );*/
       return followerAliases;
     } catch (error) {
-      console.error("Error retrieving follower aliases", error);
+      //console.error("Error retrieving follower aliases", error);
       throw new Error("Failed to retrieve follower aliases");
     }
   }
@@ -188,10 +188,10 @@ export class FollowsDAODynamo implements FollowsDAO {
     try {
       const response = await this.client.send(new QueryCommand(params));
       const isFollower = !!(response.Items && response.Items.length > 0);
-      console.log(`Is ${alias} following ${aliasToFollow}? ${isFollower}`);
+      //console.log(`Is ${alias} following ${aliasToFollow}? ${isFollower}`);
       return isFollower;
     } catch (error) {
-      console.error("Error in getIsFollower:", error);
+      //console.error("Error in getIsFollower:", error);
       throw new Error("Error getting isFollower status");
     }
   }
@@ -211,7 +211,7 @@ export class FollowsDAODynamo implements FollowsDAO {
     //try {
     const result = await this.client.send(new QueryCommand(params));
     const count = result.Count ?? 0;
-    console.log(`Number of followees for ${alias}: ${count}`);
+    //console.log(`Number of followees for ${alias}: ${count}`);
     return count;
     // } catch (error) {
     //console.error("Error in getNumFollowee:", error);
@@ -236,7 +236,7 @@ export class FollowsDAODynamo implements FollowsDAO {
     // try {
     const result = await this.client.send(new QueryCommand(params));
     const count = result.Count ?? 0;
-    console.log(`Number of followers for ${alias}: ${count}`);
+    //console.log(`Number of followers for ${alias}: ${count}`);
     return count;
     // } catch (error) {
     // console.error("Error in getNumFollower:", error);
@@ -259,9 +259,9 @@ export class FollowsDAODynamo implements FollowsDAO {
 
     try {
       await this.client.send(new DeleteCommand(params));
-      console.log(`Successfully unfollowed: ${followee} by ${follower}`);
+      //console.log(`Successfully unfollowed: ${followee} by ${follower}`);
     } catch (error) {
-      console.error("Error in unfollowAction:", error);
+      //console.error("Error in unfollowAction:", error);
       throw new Error("Error unfollowing user");
     }
   }
@@ -277,7 +277,7 @@ export class FollowsDAODynamo implements FollowsDAO {
     try {
       await this.client.send(new PutCommand(params));
     } catch (error) {
-      console.error("Error in initializeUser:", error);
+      //console.error("Error in initializeUser:", error);
       throw new Error("Error initializing user in follows");
     }
   }

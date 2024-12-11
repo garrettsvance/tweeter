@@ -17,7 +17,7 @@ export class FeedDAODynamo implements FeedDAO {
     pageSize: number,
     hasMore?: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
-    console.log(`Fetching feed for alias: ${alias}`);
+    //console.log(`Fetching feed for alias: ${alias}`);
     const params: QueryCommandInput = {
       TableName: this.tableName,
       KeyConditionExpression: "alias = :alias",
@@ -55,7 +55,7 @@ export class FeedDAODynamo implements FeedDAO {
       );
       return [feed, hasMoreBool];
     } catch (error) {
-      console.error("Error in getFeed:", error);
+      //console.error("Error in getFeed:", error);
       throw new Error("Failed to retrieve feed");
     }
   }
@@ -65,9 +65,9 @@ export class FeedDAODynamo implements FeedDAO {
     userFollowers: string[],
     status: StatusDto,
   ): Promise<void> {
-    console.log(
+    /*console.log(
       `Pulling feed for ${userFollowers.length} followers of user: ${user.alias}`,
-    );
+    );*/
     const feedItems = userFollowers.map((follower) => ({
       alias: follower,
       timestamp: status.timestamp,
@@ -92,9 +92,9 @@ export class FeedDAODynamo implements FeedDAO {
 
     try {
       await this.client.send(new BatchWriteCommand(params));
-      console.log("Feed pulled successfully");
+      //console.log("Feed pulled successfully");
     } catch (error) {
-      console.error("Error in pullFeed:", error);
+      //console.error("Error in pullFeed:", error);
       throw new Error("Failed to pull feed");
     }
   }
