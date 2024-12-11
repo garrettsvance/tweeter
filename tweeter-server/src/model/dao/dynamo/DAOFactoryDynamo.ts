@@ -10,6 +10,8 @@ import { FollowsDAODynamo } from "./FollowsDAODynamo";
 import { S3DAODynamo } from "./S3DAODynamo";
 import { StatusDAO } from "../interface/StatusDAO";
 import { StatusDAODynamo } from "./StatusDAODynamo";
+import { SqsDAOAws } from "../sqs/SqsDAOAws";
+import { SqsDAO } from "../interface/SqsDAO";
 
 export class DAOFactoryDynamo implements DAOFactory {
   public getUserDAO() {
@@ -34,5 +36,9 @@ export class DAOFactoryDynamo implements DAOFactory {
 
   public getStatusDAO(): StatusDAO {
     return new StatusDAODynamo();
+  }
+
+  public getSqsDAO(): SqsDAO {
+    return new SqsDAOAws();
   }
 }

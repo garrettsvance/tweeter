@@ -18,4 +18,4 @@ tweeterGetIsFollower | lambda/follow/GetIsFollowerStatusLambda.handler
 tweeterPostFeeds | lambda/status/PostFeedsLambda.handler
 tweeterUpdateFeeds | lambda/status/UpdateFeedsLambda.handler
 '
-LAMBDALAYER_ARN='arn:aws:lambda:us-east-2:084828578926:layer:tweeterLambdaLayer:48'
+LAMBDALAYER_ARN='arn:aws:lambda:us-east-2:084828578926:layer:tweeterLambdaLayer:49'

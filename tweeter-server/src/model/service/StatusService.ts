@@ -3,24 +3,28 @@ import {
   Status,
   StatusDto,
   StatusSQSDto,
+  User,
   UserDto,
 } from "tweeter-shared";
 import { DAOFactory } from "../dao/factory/DAOFactory";
 import { FeedDAO } from "../dao/interface/FeedDAO";
 import { StatusDAO } from "../dao/interface/StatusDAO";
 import { FollowsDAO } from "../dao/interface/FollowsDAO";
+import { SqsDAO } from "../dao/interface/SqsDAO";
 
 export class StatusService {
   private factoryDAO: DAOFactory;
   private feedDAO: FeedDAO;
   private statusDAO: StatusDAO;
   private followsDAO: FollowsDAO;
+  private sqsDAO: SqsDAO;
 
   constructor(factoryDAO: DAOFactory) {
     this.factoryDAO = factoryDAO;
     this.feedDAO = factoryDAO.getFeedDAO();
     this.statusDAO = factoryDAO.getStatusDAO();
     this.followsDAO = factoryDAO.getFollowsDAO();
+    this.sqsDAO = factoryDAO.getSqsDAO();
   }
 
   public async loadMoreStoryItems(
@@ -72,6 +76,15 @@ export class StatusService {
       }
     } catch (error) {
       console.error("Error posting status", error);
+    }
+  }
+
+  public async sqsFeedPost(status: StatusDto): Promise<void> {
+    let followers: string[] = [];
+    let hasMore = true;
+    while (hasMore) {
+      followers = await this.followsDAO.getFollowerAliases(status.user.alias);
+      await this.sqsDAO.postToFeed(status, followers);
     }
   }
 }

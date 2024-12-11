@@ -4,6 +4,7 @@ import { FollowsDAO } from "../interface/FollowsDAO";
 import { S3DAO } from "../interface/S3DAO";
 import { SessionsDAO } from "../interface/SessionsDAO";
 import { StatusDAO } from "../interface/StatusDAO";
+import { SqsDAO } from "../interface/SqsDAO";
 
 export interface DAOFactory {
   readonly getFeedDAO: () => FeedDAO;
@@ -12,4 +13,5 @@ export interface DAOFactory {
   readonly getSessionsDAO: () => SessionsDAO;
   readonly getUserDAO: () => UserDAO;
   readonly getStatusDAO: () => StatusDAO;
+  readonly getSqsDAO: () => SqsDAO;
 }
